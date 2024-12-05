@@ -5,13 +5,13 @@ all the components files come from the installation of teh library shadcn
 
 2-
 initialize prisma : npx prisma init  ( create prisma/shema.prisma where w gonne connect our database)
-==> we used postgreSQL Database and teh provider of teh database is VERCEL ( https://vercel.com/ )
+==> we used postgreSQL Database and the provider of the database is VERCEL ( https://vercel.com/ )
 
 3-
 In development, the command next dev clears Node.js cache on run. This in turn initializes a new PrismaClient instance each time due to hot reloading that creates a connection to the database. This can quickly exhaust the database connections as each PrismaClient instance holds its own connection pool.
-the file code : lib/prismats : https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nextjs-prisma-client-dev-practices
+the file code : lib/prisma.ts : https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nextjs-prisma-client-dev-practices
 
 
 4-
 we pushed our new database tabel ( resume) to our postgres database to create it uisng this command : npx prisma db push   , 
-the file app/page.tsx is created automatically  ( it called prisma client , it allow us to use prisma in our code , add  , update , delelte , resume ..)
+the file app/page.tsx is created automatically [ default contenet ( i chnage it during the clerk authentification setup commit)]  ( it called prisma client , it allow us to use prisma in our code , add  , update , delelte , resume ..)
