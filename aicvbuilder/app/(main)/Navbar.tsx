@@ -2,7 +2,9 @@
 // because we want to have the navbar in all the pages except teh font page and the aurthentification pages
 // instead we put the navbar in the (main)/layout.tsx file
 "use client";  
-// When you add "use client" to a file: The component and its children are executed entirely in the browser (client-side). It has access to browser-specific features like:
+// When you add "use client" to a file:
+// The component and its children are executed entirely in the browser (client-side). 
+//It has access to browser-specific features like:
 // useState useEffect DOM manipulation Event handlers
 
 
@@ -11,6 +13,7 @@ import logo from "@/public/assets/logo.png";
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
 import { CreditCard } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default  function Navbar() {
     return (
@@ -29,6 +32,7 @@ export default  function Navbar() {
           </span>
         </Link>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <UserButton
             appearance={{
               elements: {

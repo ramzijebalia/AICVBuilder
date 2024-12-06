@@ -15,3 +15,7 @@ the file code : lib/prisma.ts : https://www.prisma.io/docs/orm/more/help-and-tro
 4-
 we pushed our new database tabel ( resume) to our postgres database to create it uisng this command : npx prisma db push   , 
 the file app/page.tsx is created automatically [ default contenet ( i chnage it during the clerk authentification setup commit)]  ( it called prisma client , it allow us to use prisma in our code , add  , update , delelte , resume ..)
+
+
+5-
+the Dark Mode : https://ui.shadcn.com/docs/dark-mode/next
