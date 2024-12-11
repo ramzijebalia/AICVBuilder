@@ -6,32 +6,34 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useEffect } from "react"
+import { EditorormProps } from "@/lib/types"
 
-export default function PersonalInfoForm() {
+export default function PersonalInfoForm({resumeData, setResumeData} : EditorormProps) {
 
     const form = useForm<PersonalInfoValues>({
         resolver : zodResolver(personalInfoSchemas), // we can't submit our form until our fields are valid
         defaultValues : {  
-            firstName : '',
-            lastName : '', 
-            jobTitle : '',
-            city : '',
-            country : '',
-            phone : '',
-            email : '',
+            firstName : resumeData.firstName || '',
+            lastName : resumeData.lastName || '', 
+            jobTitle : resumeData.jobTitle || '',
+            city : resumeData.city || '',
+            country :resumeData.country || '',
+            phone : resumeData.phone || '',
+            email : resumeData.email || '',
     }})
 
+    // this useEffcet to submit our form if something change
     useEffect(() => {
-        const {unsubscribe} = form.watch( async () => { // this function will triger when the form values change
+        const {unsubscribe} = form.watch( async (values) => { // this function will triger when the form values change
             // normally this is not necessary because validation ahppen when we subbmit the form
             // but our form is deffered ( we dont ahve a submit button  ) instead we always wanna past the latest input to the parrent page immediately
             // this is why we have this validation ligic by ourselfs
             const isValid = await form.trigger() 
             if(!isValid) return ;
-            // update resume data
+            setResumeData({...resumeData , ...values})
         })
         return unsubscribe
-    }, [form])
+    }, [form , resumeData , setResumeData])
 
 
     return(

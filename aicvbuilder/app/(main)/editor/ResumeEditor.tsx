@@ -4,8 +4,12 @@ import { useSearchParams } from "next/navigation";
 import { steps } from "./steps";
 import Breadcrumbs from "./Breadcrumbs";
 import Footer from "./Footer";
+import { useState } from "react";
+import { ResumeValues } from "@/lib/validation";
 
 export default function ResumeEditor() {
+
+    const [resumeData , setResumeData] = useState<ResumeValues>({}) // we will use this to store the data of the resume
 
     const searchParams = useSearchParams() //
     // from teh search params we w can get the currently active step ( form)
@@ -35,11 +39,14 @@ export default function ResumeEditor() {
                 <div className="absolute bottom-0 top-0 flex w-full">
                     <div className="w-full p-3 md:w-1/2 overflow-y-auto space-y-6" >
                          <Breadcrumbs currentStep={currentStep} setCurrentStep={setStep}/>
-                         {FormComponent && <FormComponent/>}
+                         {FormComponent && <FormComponent 
+                            resumeData={resumeData}
+                            setResumeData={setResumeData}
+                        />}
                     </div>
                     <div className="grow md:border-r"/>
                     <div className="hidden w-1/2 md:flex">
-                        RIGHT
+                        <pre>{JSON.stringify(resumeData , null , 2)}</pre>
                     </div>
                 </div>
             </main>

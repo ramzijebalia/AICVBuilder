@@ -42,3 +42,22 @@ export const personalInfoSchemas = z.object({
 })
 
 export type PersonalInfoValues = z.infer<typeof personalInfoSchemas>
+
+// shema for the whole resume
+export const resumeSchemas = z.object({
+    ...generalInfoSchemas.shape,
+    ...personalInfoSchemas.shape,
+})
+
+export type ResumeValues = Omit<z.infer<typeof resumeSchemas> , "photo"> & {
+    // we need the id to update an existing resume
+    id? : string;  // id is optional because new resumes doen-t yet have an id 
+    
+
+    // teh photo in the  personal info is a file or unfiedned
+    // but when we upload teh photo in our backend the photo turns into url ( teh url into our blop storage )
+    // whenw eload it into our cv fle , it is not a file anymore it is a url ( it is a string)
+    // so we need to add a photo property that is a string ( url )
+    // we used the OMit utility type to remove the photo from teh original type ( persoanll info ) and replace it with thsi photo property
+    photo? : File | string | null;
+}
