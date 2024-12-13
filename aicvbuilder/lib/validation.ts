@@ -58,7 +58,7 @@ export const workExperienceSchema = z.object({
     ).optional(),
 })
 
-export type WorkExperieneValues = z.infer<typeof workExperienceSchema>
+export type WorkExperienceValues = z.infer<typeof workExperienceSchema>
 
 
 // shema for the whole resume

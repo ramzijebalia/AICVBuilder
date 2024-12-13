@@ -1,6 +1,6 @@
 // shadcn form docs : https://ui.shadcn.com/docs/components/form
 
-import {  personalInfoSchemas, PersonalInfoValues } from "@/lib/validation"
+import {  personalInfoSchema, PersonalInfoValues } from "@/lib/validation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
@@ -11,7 +11,7 @@ import { EditorormProps } from "@/lib/types"
 export default function PersonalInfoForm({resumeData, setResumeData} : EditorormProps) {
 
     const form = useForm<PersonalInfoValues>({
-        resolver : zodResolver(personalInfoSchemas), // we can't submit our form until our fields are valid
+        resolver : zodResolver(personalInfoSchema), // we can't submit our form until our fields are valid
         defaultValues : {  
             firstName : resumeData.firstName || '',
             lastName : resumeData.lastName || '', 
