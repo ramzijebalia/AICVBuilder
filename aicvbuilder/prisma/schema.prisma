@@ -35,11 +35,37 @@ model Resume {
   phone       String?
   email       String?
 
+  workExperiences workExperience[]
+
   createdAt   DateTime @default(now()) // default value is current time
   updatedAt   DateTime @updatedAt // updated time
 
   @@map("resumes") // by default the name of teh tabel is the nae of the model in plural form
                     // it is a personal preference to name the table as resumes
   
-  
 }
+
+// z=each work experiece will be saved i a separated table
+// one to many relashionship : 1 resume can hev multiple experience
+model workExperience {
+  id       String   @id @default(cuid())
+
+  position String?
+  company   String?
+  startDate DateTime?
+  endDate   DateTime?
+  description String?
+
+  resumeId String  // teh id of the resume which this exp related to
+  
+  // this relation to fetch alla work exp
+  // this connects the work exp model to the resume model
+  // this resume id resumeID in the workExp model) belong to the resume table ( id )
+  resume   Resume @relation(fields: [resumeId], references: [id]) 
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workExperiences")
+} 

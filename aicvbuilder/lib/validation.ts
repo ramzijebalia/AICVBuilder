@@ -13,16 +13,16 @@ export const  optionalString  = z.string().trim().optional().or(z.literal(''))
 
 
 /// GENERAL INFO SHEMA :
-export const generalInfoSchemas = z.object({
+export const generalInfoSchema = z.object({
     title : optionalString,
     description : optionalString,
 })
 
-export type GeneralInfoValues = z.infer<typeof generalInfoSchemas>
+export type GeneralInfoValues = z.infer<typeof generalInfoSchema>
 
 
 /// PERSONAL INFO SHEMA :
-export const personalInfoSchemas = z.object({
+export const personalInfoSchema = z.object({
     photo : z.custom<File | undefined>()
     .refine(
         (file) => !file || (file instanceof File && file.type.startsWith('image/')),
@@ -41,15 +41,34 @@ export const personalInfoSchemas = z.object({
 
 })
 
-export type PersonalInfoValues = z.infer<typeof personalInfoSchemas>
+export type PersonalInfoValues = z.infer<typeof personalInfoSchema>
 
-// shema for the whole resume
-export const resumeSchemas = z.object({
-    ...generalInfoSchemas.shape,
-    ...personalInfoSchemas.shape,
+
+// WORK EXPERIENCE SHEMA :
+export const workExperienceSchema = z.object({
+    // we can add as many work exp as we want for that we need to put array
+    workExperiences : z.array(
+        z.object({
+            position : optionalString,
+            company : optionalString,
+            startDate : optionalString,
+            endDate : optionalString,
+            description : optionalString
+        })
+    ).optional(),
 })
 
-export type ResumeValues = Omit<z.infer<typeof resumeSchemas> , "photo"> & {
+export type WorkExperieneValues = z.infer<typeof workExperienceSchema>
+
+
+// shema for the whole resume
+export const resumeSchema = z.object({
+    ...generalInfoSchema.shape,
+    ...personalInfoSchema.shape,
+    ...workExperienceSchema.shape,
+})
+
+export type ResumeValues = Omit<z.infer<typeof resumeSchema> , "photo"> & {
     // we need the id to update an existing resume
     id? : string;  // id is optional because new resumes doen-t yet have an id 
     
