@@ -77,12 +77,24 @@ export const educationSchema = z.object({
 export type EducationValues = z.infer<typeof educationSchema>
 
 
+// SKILLS SHEMA :
+export const skillsSchema = z.object({
+    // we can add as many work exp as we want for that we need to put array
+    skills : z.array(
+        z.string().trim()
+    ).optional(),
+})
+
+export type SkillsValues = z.infer<typeof skillsSchema>
+
+
 // shema for the whole resume
 export const resumeSchema = z.object({
     ...generalInfoSchema.shape,
     ...personalInfoSchema.shape,
     ...workExperienceSchema.shape,
-    ...educationSchema.shape
+    ...educationSchema.shape,
+    ...skillsSchema.shape
 })
 
 export type ResumeValues = Omit<z.infer<typeof resumeSchema> , "photo"> & {

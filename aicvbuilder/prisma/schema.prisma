@@ -37,6 +37,7 @@ model Resume {
 
   workExperiences workExperience[]
   educations      Education[]
+  skills          String[]
 
   createdAt   DateTime @default(now()) // default value is current time
   updatedAt   DateTime @updatedAt // updated time
