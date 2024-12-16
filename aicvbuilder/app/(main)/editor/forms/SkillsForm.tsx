@@ -1,15 +1,12 @@
 //usefieldarray docs ; https://react-hook-form.com/docs/usefieldarray
 
-import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { EditorormProps } from "@/lib/types";
-import { skillsSchema, SkillsValues, workExperienceSchema, WorkExperienceValues } from "@/lib/validation";
+import { skillsSchema, SkillsValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GripHorizontal } from "lucide-react";
 import { useEffect } from "react";
-import { useFieldArray, useForm, UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 export default function SkillsForm({resumeData , setResumeData}: EditorormProps){
     const form = useForm<SkillsValues>({
