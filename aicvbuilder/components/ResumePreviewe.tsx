@@ -25,6 +25,7 @@ export default function ResumePreview({resumeData , clasName}: ResumePreviewProp
             <div className={cn("space-y-6 p-6" , !width && "invisible")} style={{zoom: (1/794) * width}}>
                 {/* 794 is the number of pixels form 210 mm */}
                 <PersonalInfoHeader resumeData={resumeData}/>
+                <SummarySection resumeData={resumeData}/>
             </div>
         </div>
 
@@ -77,4 +78,21 @@ function PersonalInfoHeader({resumeData} : ResumePreviewSectionProps){
                 </p>
             </div>
         </div>
+)}
+
+
+
+function SummarySection({resumeData} : ResumePreviewSectionProps){
+    const {summary} = resumeData
+    if(!summary) return null
+
+    return(
+        <>
+        <hr className="border-2" />
+        {/* break inside avoid : make sure that when we print teh resume it will not split teh contenet of the div ( ike print the p in teh page and the sulmary in an aother page) */}
+        <div className="space-y-3 break-inside-avoid">
+            <p className="text-lg font-semibold">Professional Profile</p>
+            <div className="whitespace-pre-line text-sm">{summary}</div>
+        </div>
+        </>
 )}
