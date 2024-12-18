@@ -1,7 +1,8 @@
 import useDimensions from "@/hooks/useDimensions"
 import { cn } from "@/lib/utils"
 import { ResumeValues } from "@/lib/validation"
-import { useRef } from "react"
+import Image from "next/image"
+import { useEffect, useRef, useState } from "react"
 
 interface ResumePreviewProps {
     resumeData : ResumeValues // contain all teh data from our form fields
@@ -23,10 +24,57 @@ export default function ResumePreview({resumeData , clasName}: ResumePreviewProp
 
             <div className={cn("space-y-6 p-6" , !width && "invisible")} style={{zoom: (1/794) * width}}>
                 {/* 794 is the number of pixels form 210 mm */}
-                <h1 className="p-6 text-3xl font-bold">
-                    this text should change with the size of teh conatainer div
-                </h1>
+                <PersonalInfoHeader resumeData={resumeData}/>
             </div>
         </div>
 
+)}
+
+
+interface ResumePreviewSectionProps {
+    resumeData : ResumeValues
+}
+
+function PersonalInfoHeader({resumeData} : ResumePreviewSectionProps){
+    const {photo , firstName , lastName , jobTitle , city , country , phone , email} = resumeData
+    // if the photo is an instance of file then we gonna asign an empty string to the photoSrc else we gonna asign the photo ( which is a string it is not a file)
+    const [photoSrc , setPhotoSrc] = useState(photo instanceof File ? "" : photo)
+
+    // we will turn teh file of the photo into a string that we can use to resnder the image in teh screen
+    useEffect(()=>{
+        const objectUrl = photo instanceof File ? URL.createObjectURL(photo) : ""
+        if (objectUrl) setPhotoSrc(objectUrl)
+        // if we do not select the photo or we removed the photo
+        if(photo === null) setPhotoSrc("")
+        // we need to revoke the object url to prevent memory leaks
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [photo])
+
+    return(
+        <div className="flex iteù-center gap-6">
+            {photoSrc && (
+                <Image
+                    src={photoSrc}
+                    width={100}
+                    height={100}
+                    alt="Author's photo"
+                    className="aspect-square object-cover"
+                />
+            )}
+            <div className="space-y-2.5">
+                <div className="space-y-1">
+                    <p className="text-3xl font-bold">
+                        {firstName} {lastName}
+                    </p>
+                    <p className="font-medium">{jobTitle}</p>
+                </div>
+                <p className="text-xs text-gray-500">
+                    {city}
+                    {city && country ? ", " : ""}
+                    {country}
+                    {(city || country) && (phone || email ) ? " • " : ""}
+                    {[phone , email].filter(Boolean).join(" • ")}
+                </p>
+            </div>
+        </div>
 )}
