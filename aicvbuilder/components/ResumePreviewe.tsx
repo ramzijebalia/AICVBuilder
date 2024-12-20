@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import {formatDate} from "date-fns"
 import { space } from "postcss/lib/list"
+import { Badge } from "./ui/badge"
 
 interface ResumePreviewProps {
     resumeData : ResumeValues // contain all teh data from our form fields
@@ -30,6 +31,7 @@ export default function ResumePreview({resumeData , clasName}: ResumePreviewProp
                 <SummarySection resumeData={resumeData}/>
                 <WorkExperienceSection resumeData={resumeData}/>
                 <EducationSection resumeData={resumeData}/>
+                <SkillsSection resumeData={resumeData}/>
             </div>
         </div>
 
@@ -114,7 +116,7 @@ function WorkExperienceSection({resumeData} : ResumePreviewSectionProps){
     return(
         <>
             <hr className="border-2" />
-            <div className="text-y-3">
+            <div className="space-y-3">
                 <p className="text-lg font-semibold">Work Experience</p>
                 {workExperiencesNotEmpty.map((exp , index) => (
                     <div key={index} className="break-inside-avoid space-y-1 m-3">
@@ -150,7 +152,7 @@ function EducationSection({resumeData} : ResumePreviewSectionProps){
     return(
         <>
             <hr className="border-2" />
-            <div className="text-y-3">
+            <div className="space-y-3">
                 <p className="text-lg font-semibold">Education</p>
                 {educationsNotEmpty.map((edu , index) => (
                     <div key={index} className="break-inside-avoid space-y-1 m-3">
@@ -168,6 +170,34 @@ function EducationSection({resumeData} : ResumePreviewSectionProps){
                         <p className="text-xs font-semibold">{edu.school}</p>
                     </div>
                 ))}
+            </div>
+        </>
+        
+)}
+
+
+
+function SkillsSection({resumeData} : ResumePreviewSectionProps){
+    const {skills} = resumeData
+    if(!skills?.length) return null
+
+
+    return(
+        <>
+            <hr className="border-2" />
+            <div className=" break-inside-avoid space-y-3">
+                <p className="text-lg font-semibold">Skills</p>
+                <div className="flex break-inside-avoid flex-wrap gap-2">
+                    {/* the empty skils ( , ,) are already filtred , we handled it in our form */}
+                    {/* by defaut the badge change the color by chnaging teh theme , dark , light , for that we hardcoded the color in the className */}
+                    {skills.map((skill , index) => (
+                        <Badge key={index} className="bg-black hover:bg-black text-white rounded-md">
+                            {skill}
+                        </Badge>
+                    ))}
+                </div>
+                
+
             </div>
         </>
         
