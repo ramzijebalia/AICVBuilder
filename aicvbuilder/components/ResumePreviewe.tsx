@@ -4,7 +4,6 @@ import { ResumeValues } from "@/lib/validation"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import {formatDate} from "date-fns"
-import { space } from "postcss/lib/list"
 import { Badge } from "./ui/badge"
 
 interface ResumePreviewProps {
@@ -43,7 +42,7 @@ interface ResumePreviewSectionProps {
 }
 
 function PersonalInfoHeader({resumeData} : ResumePreviewSectionProps){
-    const {photo , firstName , lastName , jobTitle , city , country , phone , email} = resumeData
+    const {photo , firstName , lastName , jobTitle , city , country , phone , email , colorHex , boredrStyle} = resumeData
     // if the photo is an instance of file then we gonna asign an empty string to the photoSrc else we gonna asign the photo ( which is a string it is not a file)
     const [photoSrc , setPhotoSrc] = useState(photo instanceof File ? "" : photo)
 
@@ -58,7 +57,7 @@ function PersonalInfoHeader({resumeData} : ResumePreviewSectionProps){
     }, [photo])
 
     return(
-        <div className="flex iteù-center gap-6">
+        <div className="flex item-center gap-6">
             {photoSrc && (
                 <Image
                     src={photoSrc}
@@ -70,10 +69,13 @@ function PersonalInfoHeader({resumeData} : ResumePreviewSectionProps){
             )}
             <div className="space-y-2.5">
                 <div className="space-y-1">
-                    <p className="text-3xl font-bold">
+                    <p className="text-3xl font-bold"
+                        /*to cuqtomize a css value from a js variable we can use the style prop*/
+                        style={{color: colorHex }}
+                    >
                         {firstName} {lastName}
                     </p>
-                    <p className="font-medium">{jobTitle}</p>
+                    <p className="font-medium" style={{color: colorHex }}>{jobTitle}</p>
                 </div>
                 <p className="text-xs text-gray-500">
                     {city}
@@ -89,15 +91,15 @@ function PersonalInfoHeader({resumeData} : ResumePreviewSectionProps){
 
 
 function SummarySection({resumeData} : ResumePreviewSectionProps){
-    const {summary} = resumeData
+    const {summary , colorHex} = resumeData
     if(!summary) return null
 
     return(
         <>
-        <hr className="border-2" />
+        <hr className="border-2" style={{borderColor: colorHex }} />
         {/* break inside avoid : make sure that when we print teh resume it will not split teh contenet of the div ( ike print the p in teh page and the sulmary in an aother page) */}
         <div className="space-y-3 break-inside-avoid">
-            <p className="text-lg font-semibold">Professional Profile</p>
+            <p className="text-lg font-semibold" style={{color: colorHex }}>Professional Profile</p>
             <div className="whitespace-pre-line text-sm">{summary}</div>
         </div>
         </>
@@ -105,7 +107,7 @@ function SummarySection({resumeData} : ResumePreviewSectionProps){
 
 
 function WorkExperienceSection({resumeData} : ResumePreviewSectionProps){
-    const {workExperiences} = resumeData
+    const {workExperiences , colorHex} = resumeData
     const workExperiencesNotEmpty = workExperiences?.filter(
         (exp) => Object.values(exp).filter(Boolean).length > 0
     )
@@ -115,12 +117,12 @@ function WorkExperienceSection({resumeData} : ResumePreviewSectionProps){
 
     return(
         <>
-            <hr className="border-2" />
+            <hr className="border-2" style={{borderColor: colorHex }}/>
             <div className="space-y-3">
-                <p className="text-lg font-semibold">Work Experience</p>
+                <p className="text-lg font-semibold" style={{color: colorHex }}>Work Experience</p>
                 {workExperiencesNotEmpty.map((exp , index) => (
                     <div key={index} className="break-inside-avoid space-y-1 m-3">
-                        <div className="flex items-center justify-between text-sm font-semibold">
+                        <div className="flex items-center justify-between text-sm font-semibold" style={{color: colorHex }}>
                             <span>{exp.position}</span>
                             {exp.startDate &&  (
                                 <span>
@@ -141,7 +143,7 @@ function WorkExperienceSection({resumeData} : ResumePreviewSectionProps){
 )}
 
 function EducationSection({resumeData} : ResumePreviewSectionProps){
-    const {educations} = resumeData
+    const {educations, colorHex} = resumeData
     const educationsNotEmpty = educations?.filter(
         (edu) => Object.values(edu).filter(Boolean).length > 0
     )
@@ -151,12 +153,12 @@ function EducationSection({resumeData} : ResumePreviewSectionProps){
 
     return(
         <>
-            <hr className="border-2" />
+            <hr className="border-2" style={{borderColor: colorHex }} />
             <div className="space-y-3">
-                <p className="text-lg font-semibold">Education</p>
+                <p className="text-lg font-semibold" style={{color: colorHex }}>Education</p>
                 {educationsNotEmpty.map((edu , index) => (
                     <div key={index} className="break-inside-avoid space-y-1 m-3">
-                        <div className="flex items-center justify-between text-sm font-semibold">
+                        <div className="flex items-center justify-between text-sm font-semibold" >
                             <span>{edu.degree}</span>
                             {edu.startDate &&  (
                                 <span>
@@ -178,20 +180,22 @@ function EducationSection({resumeData} : ResumePreviewSectionProps){
 
 
 function SkillsSection({resumeData} : ResumePreviewSectionProps){
-    const {skills} = resumeData
+    const {skills , colorHex} = resumeData
     if(!skills?.length) return null
 
 
     return(
         <>
-            <hr className="border-2" />
+            <hr className="border-2" style={{borderColor: colorHex }} />
             <div className=" break-inside-avoid space-y-3">
-                <p className="text-lg font-semibold">Skills</p>
+                <p className="text-lg font-semibold" style={{color: colorHex }}>Skills</p>
                 <div className="flex break-inside-avoid flex-wrap gap-2">
                     {/* the empty skils ( , ,) are already filtred , we handled it in our form */}
                     {/* by defaut the badge change the color by chnaging teh theme , dark , light , for that we hardcoded the color in the className */}
                     {skills.map((skill , index) => (
-                        <Badge key={index} className="bg-black hover:bg-black text-white rounded-md">
+                        <Badge key={index} className="bg-black hover:bg-black text-white rounded-md"
+                            style={{backgroundColor: colorHex }}
+                        >
                             {skill}
                         </Badge>
                     ))}
