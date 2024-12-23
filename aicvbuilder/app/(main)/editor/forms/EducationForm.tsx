@@ -3,9 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { EditorormProps } from "@/lib/types";
-import { educationSchema, EducationValues, workExperienceSchema, WorkExperienceValues } from "@/lib/validation";
+import { educationSchema, EducationValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GripHorizontal } from "lucide-react";
 import { useEffect } from "react";
@@ -15,7 +14,7 @@ export default function EducationForm({resumeData , setResumeData}: EditorormPro
     const form = useForm<EducationValues>({
         resolver: zodResolver(educationSchema),
         defaultValues: {
-            educations : resumeData.workExperiences || []
+            educations : resumeData.educations || []
         }
     })
 
