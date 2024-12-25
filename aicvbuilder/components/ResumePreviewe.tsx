@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import {formatDate} from "date-fns"
 import { Badge } from "./ui/badge"
+import { BorderStyles } from "@/app/(main)/editor/BorderStyleButton"
 
 interface ResumePreviewProps {
     resumeData : ResumeValues // contain all teh data from our form fields
@@ -42,7 +43,7 @@ interface ResumePreviewSectionProps {
 }
 
 function PersonalInfoHeader({resumeData} : ResumePreviewSectionProps){
-    const {photo , firstName , lastName , jobTitle , city , country , phone , email , colorHex , boredrStyle} = resumeData
+    const {photo , firstName , lastName , jobTitle , city , country , phone , email , colorHex , borderStyle} = resumeData
     // if the photo is an instance of file then we gonna asign an empty string to the photoSrc else we gonna asign the photo ( which is a string it is not a file)
     const [photoSrc , setPhotoSrc] = useState(photo instanceof File ? "" : photo)
 
@@ -65,6 +66,14 @@ function PersonalInfoHeader({resumeData} : ResumePreviewSectionProps){
                     height={100}
                     alt="Author's photo"
                     className="aspect-square object-cover"
+                    style={{
+                        borderRadius: 
+                            borderStyle === BorderStyles.SQUARE 
+                                ? "0px"
+                                : borderStyle === BorderStyles.CIRCLE
+                                ? "9999px"
+                                : "10%"
+                    }}
                 />
             )}
             <div className="space-y-2.5">
@@ -180,7 +189,7 @@ function EducationSection({resumeData} : ResumePreviewSectionProps){
 
 
 function SkillsSection({resumeData} : ResumePreviewSectionProps){
-    const {skills , colorHex} = resumeData
+    const {skills , colorHex , borderStyle} = resumeData
     if(!skills?.length) return null
 
 
@@ -194,7 +203,15 @@ function SkillsSection({resumeData} : ResumePreviewSectionProps){
                     {/* by defaut the badge change the color by chnaging teh theme , dark , light , for that we hardcoded the color in the className */}
                     {skills.map((skill , index) => (
                         <Badge key={index} className="bg-black hover:bg-black text-white rounded-md"
-                            style={{backgroundColor: colorHex }}
+                            style={{
+                                backgroundColor: colorHex,
+                                borderRadius: 
+                                    borderStyle === BorderStyles.SQUARE 
+                                        ? "0px"
+                                        : borderStyle === BorderStyles.CIRCLE
+                                        ? "9999px"
+                                        : "8px"
+                            }}
                         >
                             {skill}
                         </Badge>
