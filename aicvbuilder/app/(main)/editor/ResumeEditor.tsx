@@ -7,10 +7,12 @@ import Footer from "./Footer";
 import { useState } from "react";
 import { ResumeValues } from "@/lib/validation";
 import ResumePreviewSection from "./ResumePreviewSection";
+import { cn } from "@/lib/utils";
 
 export default function ResumeEditor() {
 
     const [resumeData , setResumeData] = useState<ResumeValues>({}) // we will use this to store the data of the resume
+    const [showSmallScResumePreview , setShowSmallScResumePreview] = useState(false) // we will use this to show the resume in the small screens
 
     const searchParams = useSearchParams() //
     // from teh search params we w can get the currently active step ( form)
@@ -38,7 +40,9 @@ export default function ResumeEditor() {
             </header>
             <main className="relative grow">
                 <div className="absolute bottom-0 top-0 flex w-full">
-                    <div className="w-full p-3 md:w-1/2 overflow-y-auto space-y-6" >
+                    <div className={cn("w-full p-3 md:w-1/2 overflow-y-auto space-y-6 md:block",
+                        showSmallScResumePreview && "hidden" // we will hide the left div when we click the button ( teh showSmallScResumePreview is true)
+                    )} >
                          <Breadcrumbs currentStep={currentStep} setCurrentStep={setStep}/>
                          {FormComponent && <FormComponent 
                             resumeData={resumeData}
@@ -49,10 +53,11 @@ export default function ResumeEditor() {
                     <ResumePreviewSection 
                         resumeData={resumeData}
                         setResumeData={setResumeData}
+                        className={cn(showSmallScResumePreview && "flex")} // we will show the right div when we click the button ( teh showSmallScResumePreview is true)
                     />
                 </div>
             </main>
-            <Footer currentStep={currentStep} setCurrentStep={setStep}/>
+            <Footer currentStep={currentStep} setCurrentStep={setStep} showSmallScResumePreview={showSmallScResumePreview} setShowSmallScResumePreview={setShowSmallScResumePreview}/>
         </div>
 
 )}

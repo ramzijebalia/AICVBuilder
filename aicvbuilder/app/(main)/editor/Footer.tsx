@@ -1,16 +1,20 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { steps } from "./steps";
+import { FileUserIcon, PenLineIcon } from "lucide-react";
 
 interface FooterProps {
     // it needs to know which form it really active
     currentStep : string;
     // when we click one of the breadcrumbs link ( form ) we need to update the current step
     setCurrentStep : (step : string) => void; // => void means it doesn't return anything
+    showSmallScResumePreview : boolean; // we will use it to show the resume in teh small screens 
+    setShowSmallScResumePreview : (show : boolean) => void;
+
 }
 
 
-export default function Footer({currentStep, setCurrentStep} : FooterProps) {
+export default function Footer({currentStep, setCurrentStep , showSmallScResumePreview , setShowSmallScResumePreview} : FooterProps) {
 
     const previousStep = steps.find(
         // find the next step
@@ -37,6 +41,15 @@ export default function Footer({currentStep, setCurrentStep} : FooterProps) {
                             > Next Step
                         </Button>
                     </div>
+                    <Button
+                        variant="outline" 
+                        size="icon"
+                        onClick={() => setShowSmallScResumePreview(!showSmallScResumePreview)}
+                        className="md:hidden" // we need only to show this button on sall screens
+                        title={showSmallScResumePreview ? "Hide Resume Preview" : "Show Resume Preview"}
+                    > 
+                        {showSmallScResumePreview ? <PenLineIcon/> : <FileUserIcon/> } 
+                    </Button>
                     <div className="flex items-center gap-3">
                         <Button variant="secondary" asChild>
                             <Link href="/resumes"> Close</Link>
