@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { EditorormProps } from "@/lib/types"
+import { Button } from "@/components/ui/button"
 
 export default function PersonalInfoForm({resumeData, setResumeData} : EditorormProps) {
 
@@ -36,6 +37,8 @@ export default function PersonalInfoForm({resumeData, setResumeData} : Editororm
     }, [form , resumeData , setResumeData])
 
 
+    const photoInputRef = useRef<HTMLInputElement>(null) // we will use this ref to clear the input field 
+
     return(
         <div className="max-w-xl mx-auto space-y-6">
             <div className="space-y-1.5 text-center">
@@ -52,15 +55,31 @@ export default function PersonalInfoForm({resumeData, setResumeData} : Editororm
                         render={({field : {value , ...fieldValues}}) => (
                             <FormItem>
                                 <FormLabel>Your Photo</FormLabel>
-                                <FormControl>
-                                    <Input {...fieldValues} 
-                                    type="file" 
-                                    accept="image/*" 
-                                    onChange={(e) =>{
-                                        const file = e.target.files?.[0] // get a sigle file
-                                        fieldValues.onChange(file)
-                                    }}/>
-                                </FormControl>
+                                <div className="flex items-center gap-2">
+                                    <FormControl>
+                                        <Input {...fieldValues} 
+                                        type="file" 
+                                        accept="image/*" 
+                                        onChange={(e) =>{
+                                            const file = e.target.files?.[0] // get a sigle file
+                                            fieldValues.onChange(file)
+                                        }}
+                                        ref={photoInputRef} // this is how we can clear the input field
+                                        />
+                                    </FormControl>
+                                    <Button
+                                        variant="secondary"
+                                        type="button" //we set the type to button because we are inside a form
+                                        onClick={() => {
+                                            fieldValues.onChange(null) // this will clear the input field  ( unidefined means no image selected  but null mean beleting teh image)
+                                            if(photoInputRef.current){
+                                                photoInputRef.current.value = '' // this will clear the input field
+                                            } 
+                                        }}
+                                    >
+                                         Remove
+                                    </Button>
+                                </div>
                                 <FormMessage/> {/* this will show the error message */}
                             </FormItem>
                         )} 
