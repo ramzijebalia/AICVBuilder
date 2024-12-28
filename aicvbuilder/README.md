@@ -19,3 +19,7 @@ the file app/page.tsx is created automatically [ default contenet ( i chnage it 
 
 5-
 the Dark Mode : https://ui.shadcn.com/docs/dark-mode/next
+
+
+6-
+for the drag and drog for our array fiels (exp and edu) we used dnd kit : https://dndkit.com/

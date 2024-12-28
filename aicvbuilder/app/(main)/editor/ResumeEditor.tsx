@@ -39,7 +39,7 @@ export default function ResumeEditor() {
                 </p>
             </header>
             <main className="relative grow">
-                <div className="absolute bottom-0 top-0 flex w-full">
+                <div className="absolute bottom-0 top-0 flex w-full"> {/* in teh small screen it need to be width full and in the big and middle md1/2 */}
                     <div className={cn("w-full p-3 md:w-1/2 overflow-y-auto space-y-6 md:block",
                         showSmallScResumePreview && "hidden" // we will hide the left div when we click the button ( teh showSmallScResumePreview is true)
                     )} >
