@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { steps } from "./steps";
 import { FileUserIcon, PenLineIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FooterProps {
     // it needs to know which form it really active
@@ -10,11 +11,12 @@ interface FooterProps {
     setCurrentStep : (step : string) => void; // => void means it doesn't return anything
     showSmallScResumePreview : boolean; // we will use it to show the resume in teh small screens 
     setShowSmallScResumePreview : (show : boolean) => void;
+    isSaving : boolean;
 
 }
 
 
-export default function Footer({currentStep, setCurrentStep , showSmallScResumePreview , setShowSmallScResumePreview} : FooterProps) {
+export default function Footer({currentStep, setCurrentStep , showSmallScResumePreview , setShowSmallScResumePreview , isSaving} : FooterProps) {
 
     const previousStep = steps.find(
         // find the next step
@@ -54,7 +56,9 @@ export default function Footer({currentStep, setCurrentStep , showSmallScResumeP
                         <Button variant="secondary" asChild>
                             <Link href="/resumes"> Close</Link>
                         </Button>
-                        <p className="text-muted-foreground opacity-0">Saving ...</p>
+                        <p className={cn("text-muted-foreground opacity-0" , 
+                            isSaving && "opacity-100" // if we are saving we will show the text
+                        )}>Saving ...</p>
                     </div>
                 </div>
             </footer>

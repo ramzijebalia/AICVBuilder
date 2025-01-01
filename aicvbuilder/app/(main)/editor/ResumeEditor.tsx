@@ -8,11 +8,17 @@ import { useState } from "react";
 import { ResumeValues } from "@/lib/validation";
 import ResumePreviewSection from "./ResumePreviewSection";
 import { cn } from "@/lib/utils";
+import useAutoSaveResume from "./useAutoSaveResume";
+import useUnloadWarning from "@/hooks/useUnloadWarning";
 
 export default function ResumeEditor() {
 
     const [resumeData , setResumeData] = useState<ResumeValues>({}) // we will use this to store the data of the resume
     const [showSmallScResumePreview , setShowSmallScResumePreview] = useState(false) // we will use this to show the resume in the small screens
+
+    const {isSaving , hasUnsavedChanges} = useAutoSaveResume(resumeData) // we will use this to save the data of the resume
+
+    useUnloadWarning(hasUnsavedChanges) // we will use this hook in case the user refresh teh page befor the changes are saved ( defor the delay mentioned in the useDebounce hook 250 ms)
 
     const searchParams = useSearchParams() //
     // from teh search params we w can get the currently active step ( form)
@@ -57,7 +63,13 @@ export default function ResumeEditor() {
                     />
                 </div>
             </main>
-            <Footer currentStep={currentStep} setCurrentStep={setStep} showSmallScResumePreview={showSmallScResumePreview} setShowSmallScResumePreview={setShowSmallScResumePreview}/>
+            <Footer 
+                currentStep={currentStep} 
+                setCurrentStep={setStep} 
+                showSmallScResumePreview={showSmallScResumePreview} 
+                setShowSmallScResumePreview={setShowSmallScResumePreview}
+                isSaving={isSaving}
+            />
         </div>
 
 )}
