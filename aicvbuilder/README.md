@@ -23,3 +23,6 @@ the Dark Mode : https://ui.shadcn.com/docs/dark-mode/next
 
 6-
 for the drag and drog for our array fiels (exp and edu) we used dnd kit : https://dndkit.com/
+
+7- 
+to see the database you can write in teh terminal npx prisma studio , to open the prisma studio
