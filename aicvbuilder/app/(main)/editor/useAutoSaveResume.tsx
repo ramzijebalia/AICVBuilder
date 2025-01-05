@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { saveResume } from "./actions";
 import { Button } from "@/components/ui/button";
+import { fileReplacer } from "@/lib/utils";
 
 
 export  default function useAutoSaveResume(resumeData : ResumeValues) {
@@ -39,7 +40,7 @@ export  default function useAutoSaveResume(resumeData : ResumeValues) {
 
                 const updatedResume = await saveResume({
                     ...newData,
-                    ...(lastSavedData.photo?.toString() === newData.photo?.toString() && {photo : undefined}), // if the photo is the same we dont need to send it again
+                    ...(JSON.stringify(lastSavedData.photo, fileReplacer) === JSON.stringify(newData.photo , fileReplacer) && {photo : undefined}), // if the photo is the same we dont need to send it again
                     id : resumeId
 
                 })
@@ -78,8 +79,11 @@ export  default function useAutoSaveResume(resumeData : ResumeValues) {
             }
         }
 
+        console.log("debouncedResumeData", JSON.stringify(debouncedResumeData))
+        console.log("lastSavedData", JSON.stringify(lastSavedData))
+
         // if they are diffrent we know we have unsaved data
-        const hasUnsavedChanges = JSON.stringify(debouncedResumeData) !== JSON.stringify(lastSavedData)
+        const hasUnsavedChanges = JSON.stringify(debouncedResumeData , fileReplacer) !== JSON.stringify(lastSavedData , fileReplacer)
 
         if(hasUnsavedChanges && debouncedResumeData && !isSaving && !isError){
             save()
