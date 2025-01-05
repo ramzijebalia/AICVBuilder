@@ -6,9 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useEffect } from "react"
-import { EditorormProps } from "@/lib/types"
+import { EditorFormProps } from "@/lib/types"
 
-export default function GenerateInfoForm({resumeData , setResumeData}: EditorormProps) {
+export default function GenerateInfoForm({resumeData , setResumeData}: EditorFormProps) {
 
     const form = useForm<GeneralInfoValues>({
         resolver : zodResolver(generalInfoSchema), // we can't submit our form until our fields are valid

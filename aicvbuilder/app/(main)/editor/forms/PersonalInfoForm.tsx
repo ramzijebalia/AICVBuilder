@@ -6,10 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useEffect, useRef } from "react"
-import { EditorormProps } from "@/lib/types"
+import { EditorFormProps } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 
-export default function PersonalInfoForm({resumeData, setResumeData} : EditorormProps) {
+export default function PersonalInfoForm({resumeData, setResumeData} : EditorFormProps) {
 
     const form = useForm<PersonalInfoValues>({
         resolver : zodResolver(personalInfoSchema), // we can't submit our form until our fields are valid

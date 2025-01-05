@@ -7,13 +7,21 @@ import Footer from "./Footer";
 import { useState } from "react";
 import { ResumeValues } from "@/lib/validation";
 import ResumePreviewSection from "./ResumePreviewSection";
-import { cn } from "@/lib/utils";
+import { cn, mapToResumeVlues } from "@/lib/utils";
 import useAutoSaveResume from "./useAutoSaveResume";
 import useUnloadWarning from "@/hooks/useUnloadWarning";
+import { ResumeServerData } from "@/lib/types";
 
-export default function ResumeEditor() {
+interface ResumeEditorProps {
+    resumeToEdit: ResumeServerData | null;
+}
 
-    const [resumeData , setResumeData] = useState<ResumeValues>({}) // we will use this to store the data of the resume
+export default function ResumeEditor( {resumeToEdit} : ResumeEditorProps) {
+
+    const [resumeData , setResumeData] = useState<ResumeValues>(
+        resumeToEdit ? mapToResumeVlues(resumeToEdit) : {} ,
+    ) // we will use this to store the data of the resume
+
     const [showSmallScResumePreview , setShowSmallScResumePreview] = useState(false) // we will use this to show the resume in the small screens
 
     const {isSaving , hasUnsavedChanges} = useAutoSaveResume(resumeData) // we will use this to save the data of the resume

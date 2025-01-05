@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { EditorormProps } from "@/lib/types";
+import { EditorFormProps } from "@/lib/types";
 import { workExperienceSchema, WorkExperienceValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GripHorizontal } from "lucide-react";
@@ -17,7 +17,7 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities"
 import { cn } from "@/lib/utils";
 
-export default function WorkExperienceForm({resumeData , setResumeData}: EditorormProps){
+export default function WorkExperienceForm({resumeData , setResumeData}: EditorFormProps){
     const form = useForm<WorkExperienceValues>({
         resolver: zodResolver(workExperienceSchema),
         defaultValues: {

@@ -1,4 +1,4 @@
-import { EditorormProps } from "@/lib/types";
+import { EditorFormProps } from "@/lib/types";
 import GenerateInfoForm from "./forms/GeneralInfoForm";
 import PersonalInfoForm from "./forms/PersonalInfoForm";
 import WorkExperienceForm from "./forms/WorkExperienceForm";
@@ -8,7 +8,7 @@ import SummaryForm from "./forms/SummaryForm";
 
 export const steps : {
     title : string ;
-    component : React.ComponentType<EditorormProps>;
+    component : React.ComponentType<EditorFormProps>;
     key : string;
 
 }[] = [

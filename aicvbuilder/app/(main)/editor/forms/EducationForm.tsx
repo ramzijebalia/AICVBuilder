@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { EditorormProps } from "@/lib/types";
+import { EditorFormProps } from "@/lib/types";
 import { educationSchema, EducationValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GripHorizontal } from "lucide-react";
@@ -15,7 +15,7 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities"
 import { cn } from "@/lib/utils";
 
-export default function EducationForm({resumeData , setResumeData}: EditorormProps){
+export default function EducationForm({resumeData , setResumeData}: EditorFormProps){
     const form = useForm<EducationValues>({
         resolver: zodResolver(educationSchema),
         defaultValues: {

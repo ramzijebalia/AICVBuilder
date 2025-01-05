@@ -2,13 +2,13 @@
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { EditorormProps } from "@/lib/types";
+import { EditorFormProps } from "@/lib/types";
 import { skillsSchema, SkillsValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-export default function SkillsForm({resumeData , setResumeData}: EditorormProps){
+export default function SkillsForm({resumeData , setResumeData}: EditorFormProps){
     const form = useForm<SkillsValues>({
         resolver: zodResolver(skillsSchema),
         defaultValues: {

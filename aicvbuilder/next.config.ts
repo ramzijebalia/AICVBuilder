@@ -5,6 +5,14 @@ const nextConfig: NextConfig = {
     serverActions : {
       bodySizeLimit: "4mb", //we can snet images up to 4mb
     }
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "swekxyf8ozdwipnh.public.blob.vercel-storage.com",
+      }
+    ]
   }
 };
 
