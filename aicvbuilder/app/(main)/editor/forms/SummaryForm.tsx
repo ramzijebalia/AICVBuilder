@@ -7,6 +7,7 @@ import { summarySchema, SummaryValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import GenerateSummaryButton from "./GenerateSummaryButton";
 
 export default function SummaryForm({resumeData , setResumeData}: EditorFormProps){
     const form = useForm<SummaryValues>({
@@ -54,6 +55,11 @@ export default function SummaryForm({resumeData , setResumeData}: EditorFormProp
                                 />
                                 </FormControl>
                                 <FormMessage/>
+                                {/* we pass the key of the form componenet  that we wana fill ( here the only summary field available) wih automaticly triger our useeffect*/}
+                                <GenerateSummaryButton
+                                    resumeData={resumeData}
+                                    onSummaryGenerated={summary => form.setValue('summary' , summary)}
+                                />
                             </FormItem>
                         )} 
             />

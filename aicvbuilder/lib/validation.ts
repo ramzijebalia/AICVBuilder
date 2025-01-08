@@ -120,3 +120,13 @@ export type ResumeValues = Omit<z.infer<typeof resumeSchema> , "photo"> & {
     // we used the OMit utility type to remove the photo from teh original type ( persoanll info ) and replace it with thsi photo property
     photo? : File | string | null;
 }
+
+
+export const GenerateSummarySchema = z.object({
+    jobTitle : optionalString,
+    ...workExperienceSchema.shape,
+    ...educationSchema.shape,
+    ...skillsSchema.shape,
+})
+
+export type GenerateSummaryInput = z.infer<typeof GenerateSummarySchema>
