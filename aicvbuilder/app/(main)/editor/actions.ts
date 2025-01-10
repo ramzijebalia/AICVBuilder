@@ -12,8 +12,6 @@ export async function saveResume( values : ResumeValues) {
     // resume id
     const {id} = values
 
-    console.log("received values", values)
-
     // we will use the resume schema to valiate  our inputs
     // we have to distructure these values beacuse photo is a fiel , workexp and edu are arrays
     const {

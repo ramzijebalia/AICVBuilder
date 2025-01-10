@@ -79,9 +79,6 @@ export  default function useAutoSaveResume(resumeData : ResumeValues) {
             }
         }
 
-        console.log("debouncedResumeData", JSON.stringify(debouncedResumeData))
-        console.log("lastSavedData", JSON.stringify(lastSavedData))
-
         // if they are diffrent we know we have unsaved data
         const hasUnsavedChanges = JSON.stringify(debouncedResumeData , fileReplacer) !== JSON.stringify(lastSavedData , fileReplacer)
 

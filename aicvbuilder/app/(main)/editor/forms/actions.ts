@@ -28,9 +28,6 @@ export async function GenerateSummary(input : GenerateSummaryInput) {
     Skills : ${skills}
     `
 
-    console.log("system message ",systemMessage);
-    console.log("user message ",userMessage);
-
     const chat = model.startChat({
         history: [
           {
