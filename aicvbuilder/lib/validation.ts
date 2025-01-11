@@ -3,6 +3,7 @@
 // here we will define our form shemas
 // we will use it to validate the data received from the server
 
+import { describe } from 'node:test';
 import {z} from 'zod';
 
 
@@ -60,6 +61,10 @@ export const workExperienceSchema = z.object({
 
 export type WorkExperienceValues = z.infer<typeof workExperienceSchema>
 
+// type for a single work exp
+// teh work exp can be undifined so we need to use the NonNullable utility type to remove the undefined from the type
+// it is ana array of work exp , but w ewnat one workexp for thatwe use [number] to access to a single work exp
+export type WorkExperience = NonNullable<z.infer<typeof workExperienceSchema>["workExperiences"]>[number]
 
 // EDUCATION SHEMA :
 export const educationSchema = z.object({
@@ -120,6 +125,17 @@ export type ResumeValues = Omit<z.infer<typeof resumeSchema> , "photo"> & {
     // we used the OMit utility type to remove the photo from teh original type ( persoanll info ) and replace it with thsi photo property
     photo? : File | string | null;
 }
+
+export const generateWorkExperienceSchema = z.object({
+    // the description snet  it to the api to generate a work experience
+    description : z.string()
+                    .trim()
+                    .min(1 , "required")
+                    .min(20 , "Description must be at least 20 characters long")
+
+})
+
+export type GenerateWorkExperienceInput = z.infer<typeof generateWorkExperienceSchema>
 
 
 export const GenerateSummarySchema = z.object({

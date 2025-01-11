@@ -16,6 +16,7 @@ import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, v
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities"
 import { cn } from "@/lib/utils";
+import GenaerateWorkExperienceButton from "./GenerateWorkExperienceButton";
 
 export default function WorkExperienceForm({resumeData , setResumeData}: EditorFormProps){
     const form = useForm<WorkExperienceValues>({
@@ -147,7 +148,14 @@ function WorkExperienceItem({id , form , index , remove}: WorkExperienceItemProp
                     {...listeners}
                 />
             </div>
-
+            <div className="flex justify-center">
+                <GenaerateWorkExperienceButton
+                    onWorkExperienceGenerated={(exp) => 
+                        
+                        console.log("exp", exp)
+                    }
+                />
+            </div>
             <FormField 
                 control={form.control}
                 name={`workExperiences.${index}.position`}
