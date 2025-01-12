@@ -90,12 +90,17 @@ export async function generateWorkExperience(input : GenerateWorkExperienceInput
         throw new Error("Failed to generate AI response")
     }
 
+
     return {
         //regex to extract the job title and company name from the response
-        position : airesponse.match(/Job title : (.*)/)?.[1] || "",
-        company : airesponse.match(/Company : (.*)/)?.[1] || "",
-        description : (airesponse.match(/Description : ([\s\S]*)/)?.[1] || "").trim(),
-        startDate : airesponse.match(/Start date : (\d{4}-\d{2}-\d{2})/)?.[1],
-        endDate : airesponse.match(/End date : (\d{4}-\d{2}-\d{2})/)?.[1],
+        position: airesponse.match(/\*\*Job Title:\*\* (.*)/)?.[1] || "",
+        company: airesponse.match(/\*\*Company:\*\* (.*)/)?.[1] || "",
+        startDate: airesponse.match(/\*\*Start Date:\*\* (\d{4}-\d{2}-\d{2})/)?.[1],
+        endDate: airesponse.match(/\*\*End Date:\*\* (\d{4}-\d{2}-\d{2})/)?.[1],
+        description: (airesponse.match(/\*\*Description:\*\*\n([\s\S]*)/)?.[1] || "")
+            .split('\n')
+            .map(line => line.trim().replace(/^\* /, '- ')) // Change '*' to '- '
+            .filter(line => line.length > 0)
+            .join('\n'), // Join the array into a single string
     } satisfies WorkExperience
 }
