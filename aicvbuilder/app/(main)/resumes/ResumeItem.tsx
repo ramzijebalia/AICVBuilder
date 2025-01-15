@@ -1,10 +1,19 @@
 "use client";
 
 import ResumePreview from "@/components/ResumePreviewe";
+import { Button } from "@/components/ui/button";
+import { DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 import { ResumeServerData } from "@/lib/types";
 import { mapToResumeVlues } from "@/lib/utils";
+import { DropdownMenu, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { formatDate } from "date-fns";
+import { MoreVertical, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { startTransition, useState, useTransition } from "react";
+import { deleteResume } from "./actions";
+import { Dialog,DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import LoadingButton from "@/components/LoadingButton";
 
 interface ResumeItemProps {
     resume : ResumeServerData
@@ -14,7 +23,7 @@ export default function ResumeItem({resume} : ResumeItemProps) {
     const wasUpdated = resume.updatedAt !== resume.createdAt
 
     return (
-        <div className="group border rounded-lg border-transparent hover:border-border transition-colors bg-secondary p-3">
+        <div className="group relative border rounded-lg border-transparent hover:border-border transition-colors bg-secondary p-3">
             <div className="space-y-3">
                 <Link 
                     href={`/editor?resumeId=${resume.id}`}
@@ -39,10 +48,113 @@ export default function ResumeItem({resume} : ResumeItemProps) {
                         resumeData={mapToResumeVlues(resume)} 
                         clasName="overflow-hidden shadow-sm transition-shadow group-hover:shadow-lg"
                     />
-                    <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent"/>
+                    <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent"/>
                 </Link>
 
             </div>
+            <MoreMenu resumeId={resume.id} />
         </div>
+    )
+}
+
+interface MoreMenuProps {
+    resumeId : string 
+}
+function MoreMenu({resumeId} : MoreMenuProps){
+    // dop down menu ;; shadcn docs : https://ui.shadcn.com/docs/components/dropdown
+
+    // we will use his state to to show a modal where th user need to confirm the deletion of the resume
+    const [showDeleteConfirmation , setShowDeleteConfirmation] = useState(false)
+
+    return (
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0.5 top-0.5 opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                        <MoreVertical className="size-4"/>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem 
+                        className="flex items-center gap-2"
+                        onSelect={() => setShowDeleteConfirmation(true)}
+                    >
+                        <Trash2 className="size-4 "/>
+                        Delete
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <DeleteConfirmationDialog 
+                resumeId={resumeId}
+                open={showDeleteConfirmation}
+                onOpenChange={setShowDeleteConfirmation}
+            />
+        </>
+    )
+}
+
+
+interface DeleteConfirmationDialogProps {
+    resumeId : string
+    open : boolean
+    onOpenChange : (open : boolean) => void
+}
+function DeleteConfirmationDialog({resumeId , open , onOpenChange} : DeleteConfirmationDialogProps){
+    // we will use this function to delete the resume
+
+    const {toast} = useToast()
+
+    // when we call a server action like delete resume from a clinet compoennet
+    // and we have validatepath which refresh  the page , we should wrap this into  a transition
+    // because then this oending state will include this revalidate call , it will wiat until teh page will resfresh
+    const [isPending , setIsPending] = useTransition()
+
+    async function handleDelete(){
+        startTransition( async() => {
+            try {
+                await deleteResume(resumeId)
+                onOpenChange(false)
+            } catch (error) {
+                console.error(error)
+                toast({
+                    variant : "destructive",
+                    description : "Something went wrong. please try again"
+                })
+            }
+        })
+    }
+
+    return (
+        <Dialog 
+            open={open}
+            onOpenChange={onOpenChange}
+        >
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle> Delete Resume ?</DialogTitle>
+                    <DialogDescription>
+                        This will permanently delete the resume. Are you sure you want to continue ?
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <LoadingButton
+                        variant="destructive"
+                        onClick={handleDelete}
+                        loading={isPending}
+                    >
+                        Delete
+                    </LoadingButton>
+                    <Button 
+                        variant="secondary"
+                        onClick={() => {onOpenChange(false)}}>
+                        Cancel
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     )
 }
