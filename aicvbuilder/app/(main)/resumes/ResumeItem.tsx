@@ -1,3 +1,4 @@
+// recat to print docs ; https://www.npmjs.com/package/react-to-print
 "use client";
 
 import ResumePreview from "@/components/ResumePreviewe";
@@ -8,12 +9,13 @@ import { ResumeServerData } from "@/lib/types";
 import { mapToResumeVlues } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { formatDate } from "date-fns";
-import { MoreVertical, Trash2 } from "lucide-react";
+import { MoreVertical, Printer, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { startTransition, useState, useTransition } from "react";
+import { startTransition, useRef, useState, useTransition } from "react";
 import { deleteResume } from "./actions";
 import { Dialog,DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import LoadingButton from "@/components/LoadingButton";
+import  {useReactToPrint} from "react-to-print"
 
 interface ResumeItemProps {
     resume : ResumeServerData
@@ -21,6 +23,12 @@ interface ResumeItemProps {
 
 export default function ResumeItem({resume} : ResumeItemProps) {
     const wasUpdated = resume.updatedAt !== resume.createdAt
+
+    const contentRef = useRef<HTMLDivElement>(null)
+    const reactToPrintFn = useReactToPrint({
+        contentRef , // the ref to the div we wanna print
+        documentTitle : resume.title || "Resume",
+    })
 
     return (
         <div className="group relative border rounded-lg border-transparent hover:border-border transition-colors bg-secondary p-3">
@@ -45,22 +53,24 @@ export default function ResumeItem({resume} : ResumeItemProps) {
                     className="relative inline-block w-full"
                 >
                     <ResumePreview 
-                        resumeData={mapToResumeVlues(resume)} 
+                        resumeData={mapToResumeVlues(resume)}
+                        contentRef={contentRef}
                         clasName="overflow-hidden shadow-sm transition-shadow group-hover:shadow-lg"
                     />
                     <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent"/>
                 </Link>
 
             </div>
-            <MoreMenu resumeId={resume.id} />
+            <MoreMenu resumeId={resume.id}  onPrintClick={reactToPrintFn}/>
         </div>
     )
 }
 
 interface MoreMenuProps {
     resumeId : string 
+    onPrintClick : () => void
 }
-function MoreMenu({resumeId} : MoreMenuProps){
+function MoreMenu({resumeId , onPrintClick} : MoreMenuProps){
     // dop down menu ;; shadcn docs : https://ui.shadcn.com/docs/components/dropdown
 
     // we will use his state to to show a modal where th user need to confirm the deletion of the resume
@@ -81,10 +91,17 @@ function MoreMenu({resumeId} : MoreMenuProps){
                 <DropdownMenuContent>
                     <DropdownMenuItem 
                         className="flex items-center gap-2"
-                        onSelect={() => setShowDeleteConfirmation(true)}
+                        onClick={() => setShowDeleteConfirmation(true)}
                     >
                         <Trash2 className="size-4 "/>
                         Delete
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        className="flex items-center gap-2"
+                        onClick={onPrintClick}
+                    >
+                        <Printer className="size-4"/>
+                        Print
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

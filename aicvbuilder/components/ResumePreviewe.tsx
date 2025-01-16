@@ -9,11 +9,13 @@ import { BorderStyles } from "@/app/(main)/editor/BorderStyleButton"
 
 interface ResumePreviewProps {
     resumeData : ResumeValues // contain all teh data from our form fields
+    contentRef? : React.Ref<HTMLDivElement>
     clasName? : string
+
 
 }
 
-export default function ResumePreview({resumeData , clasName}: ResumePreviewProps){
+export default function ResumePreview({resumeData, contentRef , clasName}: ResumePreviewProps){
 
     const containerRef = useRef<HTMLDivElement>(null)
     const {width} = useDimensions(containerRef)
@@ -25,7 +27,7 @@ export default function ResumePreview({resumeData , clasName}: ResumePreviewProp
             {/* we use  the cn ( from shadcn ) to ensure that the clasname overwrite the already existing class */}
             {/* teh background of teh sheet paper is white even in teh dark mode , the text is always black , and the size of teh paper A4 is 21 cm and 29.7 cm*/}
 
-            <div className={cn("space-y-6 p-6" , !width && "invisible")} style={{zoom: (1/794) * width}}>
+            <div className={cn("space-y-6 p-6" , !width && "invisible")} style={{zoom: (1/794) * width}} ref={contentRef} id="resumePreviewContent">
                 {/* 794 is the number of pixels form 210 mm */}
                 <PersonalInfoHeader resumeData={resumeData}/>
                 <SummarySection resumeData={resumeData}/>
