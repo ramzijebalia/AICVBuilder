@@ -79,31 +79,34 @@ function MoreMenu({resumeId , onPrintClick} : MoreMenuProps){
     return (
         <>
             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-0.5 top-0.5 opacity-0 transition-opacity group-hover:opacity-100"
-                    >
-                        <MoreVertical className="size-4"/>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuItem 
-                        className="flex items-center gap-2"
-                        onClick={() => setShowDeleteConfirmation(true)}
-                    >
-                        <Trash2 className="size-4 "/>
-                        Delete
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        className="flex items-center gap-2"
-                        onClick={onPrintClick}
-                    >
-                        <Printer className="size-4"/>
-                        Print
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
+            <DropdownMenuTrigger asChild>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0.5 top-0.5 opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer border border-gray-300 rounded-full p-2 hover:bg-gray-100"
+                >
+                    <MoreVertical className="w-4 h-4" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+                className="bg-white border border-gray-200 rounded-md shadow-lg p-2 w-48"
+            >
+                <DropdownMenuItem
+                    className="flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer hover:bg-gray-100 transition-all"
+                    onClick={() => setShowDeleteConfirmation(true)}
+                >
+                    <Trash2 className="w-4 h-4" />
+                    <span>Delete</span>
+                </DropdownMenuItem>
+                <hr className="my-1 border-gray-200" />
+                <DropdownMenuItem
+                    className="flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer hover:bg-gray-100 transition-all"
+                    onClick={onPrintClick}
+                >
+                    <Printer className="w-4 h-4" />
+                    <span>Print</span>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
             </DropdownMenu>
             <DeleteConfirmationDialog 
                 resumeId={resumeId}
