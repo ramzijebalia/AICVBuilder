@@ -12,6 +12,8 @@ const PreminumPlusFreatures = ["Unlimited Resumes", "Design Customizations"]
 
 export default function PreminumModal() {
     const {open , setOpen} = usePreminumModal()
+    console.log("Modal open state:", open); // Add this log
+    
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="max-w-2xl">
