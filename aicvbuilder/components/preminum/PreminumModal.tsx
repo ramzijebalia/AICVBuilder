@@ -5,6 +5,9 @@ import { Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import usePreminumModal from "@/hooks/usePreminumModal";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { createCheckoutSession } from "./actions";
 
 
 const PreminumFreatures = ["AI tools", "Up to 3 Resumes"]
@@ -12,10 +15,37 @@ const PreminumPlusFreatures = ["Unlimited Resumes", "Design Customizations"]
 
 export default function PreminumModal() {
     const {open , setOpen} = usePreminumModal()
-    console.log("Modal open state:", open); // Add this log
+    
+    const {toast} = useToast()
+
+    const [loading, setLoading] = useState(false)
+
+    async function handlePreminumClick(priceId : string){
+        try {
+            setLoading(true)
+            // redirect url to the stripe checkout page
+            const redirectUrl = await createCheckoutSession(priceId)
+            window.location.href = redirectUrl!
+            
+        } catch (error) {
+            console.log(error)
+            toast({
+                variant: "destructive",
+                description : "Something went wrong, please try again later",
+            })
+        } finally {
+            setLoading(false)
+        }
+    }
     
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} 
+            onOpenChange={(open) => {
+                if(!loading){
+                    setOpen(open)
+                }
+            }}
+        >
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>Upgrade to Preminum</DialogTitle>
@@ -33,7 +63,12 @@ export default function PreminumModal() {
                                     </li>
                                 ))}
                             </ul>
-                            <Button>Get Preminum</Button>
+                            <Button
+                                onClick={() => handlePreminumClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY!)}
+                                disabled={loading}
+                            >
+                                Get Preminum
+                            </Button>
                         </div>
                         <div className="boredr-l mx-6"/>
                             <div className="flex w-1/2 flex-col space-y-5">
@@ -46,7 +81,13 @@ export default function PreminumModal() {
                                             </li>
                                         ))}
                                 </ul>
-                                <Button variant="preminum">Get Preminum Plus</Button>
+                                <Button 
+                                    variant="preminum"
+                                    onClick={() => handlePreminumClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY!)}
+                                    disabled={loading}
+                                >
+                                    Get Preminum Plus
+                                </Button>
                             </div>
                         </div>
                 </div>
