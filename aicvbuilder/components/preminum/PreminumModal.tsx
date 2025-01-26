@@ -8,6 +8,7 @@ import usePreminumModal from "@/hooks/usePreminumModal";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { createCheckoutSession } from "./actions";
+import { env } from "@/env";
 
 
 const PreminumFreatures = ["AI tools", "Up to 3 Resumes"]
@@ -64,7 +65,7 @@ export default function PreminumModal() {
                                 ))}
                             </ul>
                             <Button
-                                onClick={() => handlePreminumClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY!)}
+                                onClick={() => handlePreminumClick(env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY)}
                                 disabled={loading}
                             >
                                 Get Preminum
@@ -83,7 +84,7 @@ export default function PreminumModal() {
                                 </ul>
                                 <Button 
                                     variant="preminum"
-                                    onClick={() => handlePreminumClick(process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY!)}
+                                    onClick={() => handlePreminumClick(env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY)}
                                     disabled={loading}
                                 >
                                     Get Preminum Plus

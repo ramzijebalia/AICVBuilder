@@ -1,5 +1,6 @@
 "use server"
 
+import { env } from "@/env"
 import stripe from "@/lib/Stripe"
 import { currentUser } from "@clerk/nextjs/server"
 
@@ -19,8 +20,8 @@ export async function createCheckoutSession(priceID : string){
                 quantity: 1 // we only wanna buy one subs
             }
         ],
-        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/billing/success`,
-        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/billing`,
+        success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
+        cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
         //we force the user to use teh same email address as the one they used to sign up
         customer_email: user.emailAddresses[0].emailAddress ,
         // thsi metadata is to know whitch user is buying or removing teh subs
@@ -31,7 +32,7 @@ export async function createCheckoutSession(priceID : string){
         },
         custom_text: {
             terms_of_service_acceptance: {
-                message: `By signing up you agree to our [terms of service](${process.env.NEXT_PUBLIC_BASE_URL}/tos)`,
+                message: `By signing up you agree to our [terms of service](${env.NEXT_PUBLIC_BASE_URL}/tos)`,
             }
         },
         consent_collection: {
