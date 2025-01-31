@@ -88,3 +88,18 @@ model Education {
 
   @@map("educations")
 }
+
+//this model is used to save subs
+model UserSubscription {
+  id          String   @id @default(cuid())
+  userId      String @unique
+  stripeCustomerId String @unique
+  subscriptionId String @unique
+  stripePriceId  String 
+  stripeCurrentPeriodEnd DateTime
+  stripeCancelAtPeriodEnd Boolean @default(false) // if it is true that mean the  cancel of the subs happened at stripeCurrentPeriodEnd , if it is 0 , that lean teh next susbs at  that date 
+  crreatedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("userSubscriptions")
+}
