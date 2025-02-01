@@ -4,6 +4,9 @@ import { ResumeValues } from "@/lib/validation";
 import { WandSparklesIcon } from "lucide-react";
 import { useState } from "react";
 import { GenerateSummary } from "./actions";
+import usePreminumModal from "@/hooks/usePreminumModal";
+import { userSubscriptionLevel } from "../../SubscriptionLevelProvider";
+import { canUseAITools } from "@/lib/permissions";
 
 interface GenaerateSummaryButtonProps {
     resumeData : ResumeValues
@@ -11,11 +14,20 @@ interface GenaerateSummaryButtonProps {
 }
 
 export default function GenerateSummaryButton({resumeData , onSummaryGenerated} : GenaerateSummaryButtonProps){
+
+    const subscriptionLevel = userSubscriptionLevel()
+    const premiumModal = usePreminumModal()
+
     const {toast} = useToast()
 
     const [loading , setLoading] = useState(false)
 
     async function handleClick(){
+        if(!canUseAITools(subscriptionLevel)){
+            premiumModal.setOpen(true)
+            return
+        }
+
         try {
             setLoading(true)
             const airesponse = await GenerateSummary(resumeData)

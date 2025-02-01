@@ -10,12 +10,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogDescription, DialogHeader , DialogContent , DialogTitle} from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { userSubscriptionLevel } from "../../SubscriptionLevelProvider";
+import usePreminumModal from "@/hooks/usePreminumModal";
+import { canUseAITools } from "@/lib/permissions";
 
 interface GenaerateWorkExperienceButtonProps {
     onWorkExperienceGenerated : (workExperience : WorkExperience) => void
 }
 
 export default function GenaerateWorkExperienceButton({onWorkExperienceGenerated} : GenaerateWorkExperienceButtonProps){
+
+    const subscriptionLevel = userSubscriptionLevel()
+    const premiumModal = usePreminumModal()
+
     const [showInputDialog, setShowInputDialog] = useState(false)
     
 
@@ -24,7 +31,14 @@ export default function GenaerateWorkExperienceButton({onWorkExperienceGenerated
             <Button 
                 variant="outline" 
                 type="button"
-                onClick={() => {setShowInputDialog(true)}}
+                onClick={() => {
+                    if(!canUseAITools(subscriptionLevel)){
+                        premiumModal.setOpen(true)
+                        return
+                    }
+                    setShowInputDialog(true)}
+                
+                }
                 >
                 <WandSparklesIcon className="size-4"/>
                 Smart Fill (AI)

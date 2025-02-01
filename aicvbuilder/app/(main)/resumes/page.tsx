@@ -10,6 +10,8 @@ import { auth } from "@clerk/nextjs/server"
 import { Metadata } from "next"
 import ResumeItem from "./ResumeItem"
 import CreateResumeButton from "./CreateResumeButton"
+import { getUserSubscriptionLevel } from "@/lib/subscriptions"
+import { canCreateResumr } from "@/lib/permissions"
 
 export const metadata : Metadata = {
     title : "Your Resumes" // the title of the page
@@ -22,7 +24,7 @@ export default async function Page() {
     if(!userId) return null
 
     // promise.all is used to run multiple promises in parallel
-    const [resumes , totalCount] = await Promise.all([
+    const [resumes , totalCount , SubscriptionLevel] = await Promise.all([
         prisma.resume.findMany({
             where : {
                 userId
@@ -37,7 +39,9 @@ export default async function Page() {
             where : {
                 userId
             }
-        })
+        }),
+        // we used the cach in this function to dedeublicate the request ( ( no : one for the layout and one for this  page))
+        getUserSubscriptionLevel(userId)
     ])
 
     //we will check teh quota later for no preminum user
@@ -45,7 +49,7 @@ export default async function Page() {
     
     return (
     <main className="maw-w-7xl mx-auto w-full px-3 py-6 space-y-6"> 
-        <CreateResumeButton canCreate={totalCount < 3} />
+        <CreateResumeButton canCreate={canCreateResumr(SubscriptionLevel , totalCount)} />
         <div className="space-y-1">
             <h1 className="text-3xl font-bold">Your Resumes</h1>
             <p>Total : {totalCount}</p>

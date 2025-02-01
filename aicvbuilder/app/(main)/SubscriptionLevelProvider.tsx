@@ -1,4 +1,4 @@
-"user client"
+"use client"
 
 import { SubscriptionLevel } from "@/lib/subscriptions"
 import { createContext, useContext } from "react"

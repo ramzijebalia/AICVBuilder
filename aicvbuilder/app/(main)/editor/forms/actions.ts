@@ -1,10 +1,20 @@
-"user server"
+"use server"
 
 import model from "@/lib/Gemini";
 import genAI from "@/lib/Gemini";
+import { canUseAITools } from "@/lib/permissions";
+import { getUserSubscriptionLevel } from "@/lib/subscriptions";
 import { GenerateSummaryInput, GenerateSummarySchema, GenerateWorkExperienceInput, generateWorkExperienceSchema, WorkExperience } from "@/lib/validation";
+import { auth } from "@clerk/nextjs/server";
 
 export async function GenerateSummary(input : GenerateSummaryInput) {
+    const {userId} = await auth()
+    if(!userId) throw new Error ("Unauthorized")
+    
+    const subscriptionLevel = await getUserSubscriptionLevel(userId)
+    if(!canUseAITools(subscriptionLevel)){
+      throw new Error("Upgrade your subscription to use this feature")
+    }
 
     const {jobTitle , workExperiences , educations , skills} = GenerateSummarySchema.parse(input);
 
@@ -52,6 +62,14 @@ export async function GenerateSummary(input : GenerateSummaryInput) {
 }
 
 export async function generateWorkExperience(input : GenerateWorkExperienceInput) {
+    const {userId} = await auth()
+    if(!userId) throw new Error ("Unauthorized")
+    
+    const subscriptionLevel = await getUserSubscriptionLevel(userId)
+    if(!canUseAITools(subscriptionLevel)){
+      throw new Error("Upgrade your subscription to use this feature")
+    }
+
     const  {description} = generateWorkExperienceSchema.parse(input);
 
     const systemMessage = `

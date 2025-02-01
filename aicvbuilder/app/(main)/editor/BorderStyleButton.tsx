@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button";
+import usePreminumModal from "@/hooks/usePreminumModal";
 import { Circle, Square, Squircle } from "lucide-react";
+import { userSubscriptionLevel } from "../SubscriptionLevelProvider";
+import { canUseCustomizations } from "@/lib/permissions";
 
 export const BorderStyles = {
     SQUARE : "square",
@@ -16,7 +19,14 @@ interface BorderStyleButtonProps {
 }
 export default function BorderStyleButton({borderStyle , onChange} : BorderStyleButtonProps){
 
+    const subscriptionLevel = userSubscriptionLevel()
+    const premiumModal = usePreminumModal()
+
     function handleClick(){
+        if(!canUseCustomizations(subscriptionLevel)){
+            premiumModal.setOpen(true)
+            return
+        }
         // find the index of the current border style
         const currentIndex = borderStyle ? borderStyles.indexOf(borderStyle) : 0
         // thsi to make sure that we will not go out of the array and to go to the first element (3+1)%3 = 1 , return to the first element

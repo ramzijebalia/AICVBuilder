@@ -2,7 +2,9 @@
 // to turn it into a server action
 "use server"
 
+import { canCreateResumr, canUseCustomizations } from "@/lib/permissions";
 import prisma from "@/lib/prisma";
+import { getUserSubscriptionLevel } from "@/lib/subscriptions";
 import { resumeSchema, ResumeValues } from "@/lib/validation";
 import { auth } from "@clerk/nextjs/server";
 import { del, put } from "@vercel/blob";
@@ -21,10 +23,29 @@ export async function saveResume( values : ResumeValues) {
     // user id
     const {userId} = await auth()
     if(!userId) throw new Error("User not Authenticated")
+    
+    const subscriptionLevel = await getUserSubscriptionLevel(userId)
+
+    // if we wanna update an existing resume then we dont wanna block the save operation
+    if(!id){
+        const resumeCount = await prisma.resume.count({where : {userId}})
+
+        if(!canCreateResumr(subscriptionLevel , resumeCount)){
+            throw new Error("Maximun Resume count reach for this subscription level ")
+        }
+    }
 
     const existingResume = id ? await prisma.resume.findFirst({where : {id , userId}}) : null
 
     if(id && !existingResume) throw new Error("Resume not found")
+
+    const hasCustomizations = (resumeValues.borderStyle &&
+        resumeValues.borderStyle !== existingResume?.borderStyle // we wanna allow the user to keep the existinng border style enevn teh subs is experied
+    ) || (resumeValues.colorHex && 
+        resumeValues.colorHex !== existingResume?.colorHex // we wanna allow the user to keep the existinng color hex enevn teh subs is experied
+    )
+    
+    if(hasCustomizations && !canUseCustomizations(subscriptionLevel)) throw new Error("Customizations are not allowed for this subscription level ")
 
     // we need to upload teh photo to the blop storage becasue we cant store a file in our database
     // we have to upload  the file to the blop storage  and then we get teh urk back and store it in our database
