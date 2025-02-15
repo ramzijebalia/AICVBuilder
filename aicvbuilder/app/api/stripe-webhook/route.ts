@@ -2,6 +2,7 @@
 
 import { env } from "@/env";
 import stripe from "@/lib/Stripe";
+import { clerkClient } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
@@ -37,6 +38,7 @@ export async function POST(req : NextRequest){
                 console.log(`Unhandled event type ${event.type}`)
                 break;
         }
+        return new Response("Event Received", {status:200})
 
     } catch (error) {
         console.log(error)
@@ -46,7 +48,22 @@ export async function POST(req : NextRequest){
 
 
 async function handleSessionCompleted(session : Stripe.Checkout.Session){
+    // when we do a chekout for stripe , it automatically craete a customer in eth stripe dashborad with teh emaila ddress of teh user
+    // but we can have duplicate customer with the same email ( pro and pro plus)
+    // to avaoid creating duplicate user we have to store the stripe custmer id thatw  e can use it later
 
+    // id of teh user who did the checkout
+    const userId = session.metadata?.userId
+    if(!userId) {
+        throw new Error("User id is missing in session metdata")
+    }
+
+    // store the customerId  in teh clerk metadata
+    (await clerkClient()).users.updateUserMetadata(userId , {
+        privateMetadata : {
+            stripeCustomerId : session.customer as string
+        }
+    })
 }
 
 async function handleSubscriptionCreatedOrUpdated(subscriptionId : string){

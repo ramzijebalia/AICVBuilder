@@ -12,6 +12,9 @@ export async function createCheckoutSession(priceID : string){
         throw new Error("Unauthorized")
     }
 
+    // we get the stripe customer id from teh clerk metadata ( it could be undefined because new user doe snot have  stripe customer id )
+    const stripeCustomerId = user.privateMetadata.stripeCustomerId as string | undefined
+
     const session = await stripe.checkout.sessions.create({
         mode: "subscription",
         line_items: [
@@ -22,8 +25,12 @@ export async function createCheckoutSession(priceID : string){
         ],
         success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
         cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
+        customer: stripeCustomerId,
         //we force the user to use teh same email address as the one they used to sign up
-        customer_email: user.emailAddresses[0].emailAddress ,
+        customer_email: stripeCustomerId ? undefined : user.emailAddresses[0].emailAddress ,
+        metadata: {
+            userId: user.id
+        },
         // thsi metadata is to know whitch user is buying or removing teh subs
         subscription_data: {
             metadata: {
