@@ -2,8 +2,8 @@ import { SubscriptionLevel } from "./subscriptions";
 
 export function canCreateResumr(subscriptionLevel : SubscriptionLevel , currentResumeCount : number){
     const maxResumeMap : Record<SubscriptionLevel, number> = {
-        free : 1,
-        pro : 3 ,
+        free : 3,
+        pro : 6 ,
         pro_plus : Infinity
     }
 
