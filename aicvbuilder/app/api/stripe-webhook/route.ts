@@ -4,6 +4,7 @@ import { env } from "@/env";
 import prisma from "@/lib/prisma";
 import stripe from "@/lib/Stripe";
 import { clerkClient } from "@clerk/nextjs/server";
+import { console } from "inspector";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
@@ -53,6 +54,7 @@ async function handleSessionCompleted(session : Stripe.Checkout.Session){
     // but we can have duplicate customer with the same email ( pro and pro plus)
     // to avaoid creating duplicate user we have to store the stripe custmer id thatw  e can use it later
 
+    console.log("sessionyyyyy" , session)
     // id of teh user who did the checkout
     const userId = session.metadata?.userId
     if(!userId) {
@@ -69,6 +71,7 @@ async function handleSessionCompleted(session : Stripe.Checkout.Session){
 
 async function handleSubscriptionCreatedOrUpdated(subscriptionId : string){
     const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+    console.log("subscription" , subscription)
 
     // teh status of teh subscription is active , trialing or past_due ( stripe docs )
     if(subscription.status === "active" || subscription.status === "trialing" || subscription.status === "past_due"){
