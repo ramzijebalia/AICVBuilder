@@ -12,7 +12,6 @@ interface CreateResumeButtonProps {
 }
 export default function CreateResumeButton( {canCreate} : CreateResumeButtonProps) {
     const premiumModal = usePreminumModal()
-    console.log("cancarete" ,canCreate)  
 
     if(canCreate){
         return (
