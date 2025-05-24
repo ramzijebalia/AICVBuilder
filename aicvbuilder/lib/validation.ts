@@ -24,12 +24,20 @@ export type GeneralInfoValues = z.infer<typeof generalInfoSchema>
 
 /// PERSONAL INFO SHEMA :
 export const personalInfoSchema = z.object({
-    photo : z.custom<File | undefined>()
+    photo : z.custom<File | string | null | undefined>()
     .refine(
-        (file) => !file || (file instanceof File && file.type.startsWith('image/')),
+        (file) => {
+            if (!file) return true;
+            if (typeof file === 'string') return true;
+            return file.type?.startsWith('image/');
+        },
         "Must be an image file"
     )
-    .refine( file => !file || file.size < 4 * 1024 * 1024, // 4mb
+    .refine( 
+        file => {
+            if (!file || typeof file === 'string') return true;
+            return file.size < 4 * 1024 * 1024; // 4mb
+        },
         "Image size must be less than 4MB"
     ),
     firstName : optionalString,

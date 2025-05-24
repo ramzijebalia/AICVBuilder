@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import {formatDate} from "date-fns"
 import { Badge } from "./ui/badge"
 import { BorderStyles } from "@/app/(main)/editor/BorderStyleButton"
+import type { File } from "buffer"
 
 interface ResumePreviewProps {
     resumeData : ResumeValues // contain all teh data from our form fields
@@ -47,11 +48,11 @@ interface ResumePreviewSectionProps {
 function PersonalInfoHeader({resumeData} : ResumePreviewSectionProps){
     const {photo , firstName , lastName , jobTitle , city , country , phone , email , colorHex , borderStyle} = resumeData
     // if the photo is an instance of file then we gonna asign an empty string to the photoSrc else we gonna asign the photo ( which is a string it is not a file)
-    const [photoSrc , setPhotoSrc] = useState(photo instanceof File ? "" : photo)
+    const [photoSrc , setPhotoSrc] = useState(typeof photo === 'object' && photo !== null ? "" : photo)
 
     // we will turn teh file of the photo into a string that we can use to resnder the image in teh screen
     useEffect(()=>{
-        const objectUrl = photo instanceof File ? URL.createObjectURL(photo) : ""
+        const objectUrl = typeof photo === 'object' && photo !== null ? URL.createObjectURL(photo) : ""
         if (objectUrl) setPhotoSrc(objectUrl)
         // if we do not select the photo or we removed the photo
         if(photo === null) setPhotoSrc("")

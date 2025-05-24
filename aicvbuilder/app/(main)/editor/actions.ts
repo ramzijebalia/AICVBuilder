@@ -51,7 +51,7 @@ export async function saveResume( values : ResumeValues) {
     // we have to upload  the file to the blop storage  and then we get teh urk back and store it in our database
     let newPhotoUrl : string | undefined | null = undefined
     
-    if ( photo instanceof File) {
+    if (typeof photo === 'object' && photo !== null) {
         // if the resume has already a photo we will delete the old photo before uploading teh new one
         if (existingResume?.photoUrl) { await del(existingResume.photoUrl) }
         
