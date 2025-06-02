@@ -14,7 +14,6 @@ export async function createCheckoutSession(priceID : string){
 
     // we get the stripe customer id from teh clerk metadata ( it could be undefined because new user doe snot have  stripe customer id )
     const stripeCustomerId = user.privateMetadata.stripeCustomerId as string | undefined
-    console.log("stripeCustomerId" , stripeCustomerId)
 
     const session = await stripe.checkout.sessions.create({
         mode: "subscription",
