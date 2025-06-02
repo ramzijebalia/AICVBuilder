@@ -14,25 +14,63 @@ interface ResumePreviewProps {
     className?: string
 }
 
+const templateStyles = {
+    modern: {
+        container: "bg-white text-black",
+        header: "flex items-center gap-4",
+        section: "space-y-4 mt-4",
+        sectionTitle: "text-base font-semibold mr-2",
+        sectionDivider: "flex-grow border-t",
+    },
+    'two-column': {
+        container: "bg-white text-black",
+        header: "space-y-3",
+        section: "space-y-4",
+        sectionTitle: "text-base font-semibold mb-2",
+        sectionDivider: "hidden",
+    }
+}
+
 export default function ResumePreview({resumeData, contentRef, className}: ResumePreviewProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const {width} = useDimensions(containerRef)
+    const template = resumeData.template || 'modern'
+    const styles = templateStyles[template]
     
     return (
-        <div className={cn("bg-white text-black h-fit w-full aspect-[210/297]", className)} ref={containerRef}>
+        <div className={cn(styles.container, "h-fit w-full aspect-[210/297]", className)} ref={containerRef}>
             <div 
                 className={cn("p-6", !width && "invisible")} 
                 style={{zoom: (1/794) * width}} 
                 ref={contentRef} 
                 id="resumePreviewContent"
             >
-                <PersonalInfoHeader resumeData={resumeData}/>
-                <div className="space-y-4 mt-4">
-                    <SummarySection resumeData={resumeData}/>
-                    <WorkExperienceSection resumeData={resumeData}/>
-                    <EducationSection resumeData={resumeData}/>
-                    <SkillsSection resumeData={resumeData}/>
-                </div>
+                {template === 'two-column' ? (
+                    <div className="flex gap-6">
+                        {/* Left Column */}
+                        <div className="w-1/3 space-y-4">
+                            <PersonalInfoHeader resumeData={resumeData} template={template}/>
+                            <SkillsSection resumeData={resumeData} template={template}/>
+                        </div>
+                        
+                        {/* Right Column */}
+                        <div className="w-2/3 space-y-4">
+                            <SummarySection resumeData={resumeData} template={template}/>
+                            <WorkExperienceSection resumeData={resumeData} template={template}/>
+                            <EducationSection resumeData={resumeData} template={template}/>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <PersonalInfoHeader resumeData={resumeData} template={template}/>
+                        <div className={styles.section}>
+                            <SummarySection resumeData={resumeData} template={template}/>
+                            <WorkExperienceSection resumeData={resumeData} template={template}/>
+                            <EducationSection resumeData={resumeData} template={template}/>
+                            <SkillsSection resumeData={resumeData} template={template}/>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     )
@@ -40,11 +78,13 @@ export default function ResumePreview({resumeData, contentRef, className}: Resum
 
 interface ResumePreviewSectionProps {
     resumeData: ResumeValues
+    template: keyof typeof templateStyles
 }
 
-function PersonalInfoHeader({resumeData}: ResumePreviewSectionProps) {
+function PersonalInfoHeader({resumeData, template}: ResumePreviewSectionProps) {
     const {photo, firstName, lastName, jobTitle, city, country, phone, email, colorHex, borderStyle} = resumeData
     const [photoSrc, setPhotoSrc] = useState(typeof photo === 'object' && photo !== null ? "" : photo)
+    const styles = templateStyles[template]
 
     useEffect(() => {
         const objectUrl = typeof photo === 'object' && photo !== null ? URL.createObjectURL(photo) : ""
@@ -54,7 +94,7 @@ function PersonalInfoHeader({resumeData}: ResumePreviewSectionProps) {
     }, [photo])
 
     return (
-        <div className="flex items-center gap-4">
+        <div className={styles.header}>
             {photoSrc && (
                 <Image
                     src={photoSrc}
@@ -89,23 +129,25 @@ function PersonalInfoHeader({resumeData}: ResumePreviewSectionProps) {
     )
 }
 
-function SummarySection({resumeData}: ResumePreviewSectionProps) {
+function SummarySection({resumeData, template}: ResumePreviewSectionProps) {
     const {summary, colorHex} = resumeData
+    const styles = templateStyles[template]
     if(!summary) return null
 
     return (
         <div className="break-inside-avoid">
             <div className="flex items-center mb-2">
-                <h3 className="text-base font-semibold mr-2" style={{color: colorHex}}>SUMMARY</h3>
-                <div className="flex-grow border-t" style={{borderColor: colorHex}}></div>
+                <h3 className={styles.sectionTitle} style={{color: colorHex}}>SUMMARY</h3>
+                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
             </div>
             <p className="text-xs text-justify whitespace-pre-line">{summary}</p>
         </div>
     )
 }
 
-function WorkExperienceSection({resumeData}: ResumePreviewSectionProps) {
+function WorkExperienceSection({resumeData, template}: ResumePreviewSectionProps) {
     const {workExperiences, colorHex} = resumeData
+    const styles = templateStyles[template]
     const workExperiencesNotEmpty = workExperiences?.filter(
         (exp) => Object.values(exp).filter(Boolean).length > 0
     )
@@ -115,8 +157,8 @@ function WorkExperienceSection({resumeData}: ResumePreviewSectionProps) {
     return (
         <div className="break-inside-avoid">
             <div className="flex items-center mb-2">
-                <h3 className="text-base font-semibold mr-2" style={{color: colorHex}}>EXPERIENCE</h3>
-                <div className="flex-grow border-t" style={{borderColor: colorHex}}></div>
+                <h3 className={styles.sectionTitle} style={{color: colorHex}}>EXPERIENCE</h3>
+                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
             </div>
             <div className="space-y-3">
                 {workExperiencesNotEmpty.map((exp, index) => (
@@ -139,8 +181,9 @@ function WorkExperienceSection({resumeData}: ResumePreviewSectionProps) {
     )
 }
 
-function EducationSection({resumeData}: ResumePreviewSectionProps) {
+function EducationSection({resumeData, template}: ResumePreviewSectionProps) {
     const {educations, colorHex} = resumeData
+    const styles = templateStyles[template]
     const educationsNotEmpty = educations?.filter(
         (edu) => Object.values(edu).filter(Boolean).length > 0
     )
@@ -150,8 +193,8 @@ function EducationSection({resumeData}: ResumePreviewSectionProps) {
     return (
         <div className="break-inside-avoid">
             <div className="flex items-center mb-2">
-                <h3 className="text-base font-semibold mr-2" style={{color: colorHex}}>EDUCATION</h3>
-                <div className="flex-grow border-t" style={{borderColor: colorHex}}></div>
+                <h3 className={styles.sectionTitle} style={{color: colorHex}}>EDUCATION</h3>
+                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
             </div>
             <div className="space-y-3">
                 {educationsNotEmpty.map((edu, index) => (
@@ -172,15 +215,16 @@ function EducationSection({resumeData}: ResumePreviewSectionProps) {
     )
 }
 
-function SkillsSection({resumeData}: ResumePreviewSectionProps) {
+function SkillsSection({resumeData, template}: ResumePreviewSectionProps) {
     const {skills, colorHex, borderStyle} = resumeData
+    const styles = templateStyles[template]
     if(!skills?.length) return null
 
     return (
         <div className="break-inside-avoid">
             <div className="flex items-center mb-2">
-                <h3 className="text-base font-semibold mr-2" style={{color: colorHex}}>SKILLS</h3>
-                <div className="flex-grow border-t" style={{borderColor: colorHex}}></div>
+                <h3 className={styles.sectionTitle} style={{color: colorHex}}>SKILLS</h3>
+                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
             </div>
             <div className="flex flex-wrap gap-2">
                 {skills.map((skill, index) => (

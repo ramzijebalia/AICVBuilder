@@ -27,8 +27,9 @@ export default function ResumePreviewSection({resumeData , setResumeData , class
             <div className="flex w-full justify-center overflow-y-auto bg-secondary p-3"> 
                 <ResumePreview 
                     resumeData={resumeData}
-                    clasName="max-w-2xl shadow-md" // overwrite the style ofthe right div in the resumepreviex definition
+                    className="max-w-2xl shadow-md"
                 />
             </div>
         </div>
-)}
+    )
+}
