@@ -7,14 +7,16 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input"
 import { useEffect } from "react"
 import { EditorFormProps } from "@/lib/types"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 export default function GenerateInfoForm({resumeData , setResumeData}: EditorFormProps) {
 
-    const form = useForm<GeneralInfoValues>({
+    const form = useForm<GeneralInfoValues & { template: 'modern' | 'two-column' }>({
         resolver : zodResolver(generalInfoSchema), // we can't submit our form until our fields are valid
         defaultValues : {  
             title : resumeData.title || '',
-            description : resumeData.description || ''
+            description : resumeData.description || '',
+            template : resumeData.template || 'modern'
     }})
 
     // this useEffcet to submit our form if something change
@@ -69,6 +71,40 @@ export default function GenerateInfoForm({resumeData , setResumeData}: EditorFor
                                 <FormMessage/> {/* this will show the error message */}
                             </FormItem>
                         )} 
+                    />
+                    <FormField
+                        control={form.control}
+                        name="template"
+                        render={({ field }) => (
+                            <FormItem className="space-y-3">
+                                <FormLabel>Template Style</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                        className="flex flex-col space-y-1"
+                                    >
+                                        <FormItem className="flex items-center space-x-3 space-y-0">
+                                            <FormControl>
+                                                <RadioGroupItem value="modern" />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">
+                                                Modern
+                                            </FormLabel>
+                                        </FormItem>
+                                        <FormItem className="flex items-center space-x-3 space-y-0">
+                                            <FormControl>
+                                                <RadioGroupItem value="two-column" />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">
+                                                Two Column
+                                            </FormLabel>
+                                        </FormItem>
+                                    </RadioGroup>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </form>
             </Form>
