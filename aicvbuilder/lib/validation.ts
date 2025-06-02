@@ -119,6 +119,7 @@ export const resumeSchema = z.object({
     ...summarySchema.shape,
     colorHex : optionalString, // the primary color of the resume
     borderStyle : optionalString,
+    template: z.enum(['modern', 'two-column']).default('modern'), // the template style of the resume
 })
 
 export type ResumeValues = Omit<z.infer<typeof resumeSchema> , "photo"> & {

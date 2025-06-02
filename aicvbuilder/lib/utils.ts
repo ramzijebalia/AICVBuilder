@@ -53,8 +53,7 @@ export function mapToResumeVlues(data : ResumeServerData) : ResumeValues {
     skills : data.skills, // we dont need to mention or undefined because it is an array
     borderStyle : data.borderStyle , // we dont need to mention or undefined because it has a default value
     colorHex : data.colorHex , // we dont need to mention or undefined because it has a default value
+    template : data.template || 'modern', // add template with default value
     summary : data.summary || undefined,
-    
-    
   }
 }

@@ -26,6 +26,7 @@ model Resume {
   photoUrl    String?  
   colorHex    String @default("#000000") //  default value is black
   borderStyle String @default("squirecle") // boreder radius  , default value is squirecle ( between square and circle)
+  template    String @default("modern") // template style, default value is modern
   summary     String?  
   firstName   String?  
   lastName    String?  
