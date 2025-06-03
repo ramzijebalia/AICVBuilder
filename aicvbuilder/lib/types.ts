@@ -7,12 +7,14 @@ export interface EditorFormProps {
 }
 
 export const resumeDataInclude = {
-    workExperiences : true,
-    educations : true,
+    workExperiences: true,
+    educations: true,
+    certificates: true,
+    languages: true,
 } satisfies Prisma.ResumeInclude;
 
 export type ResumeServerData = Prisma.ResumeGetPayload<{
-    include :typeof resumeDataInclude
+    include: typeof resumeDataInclude
 }> & {
-    template?: string;
+    template?: 'modern' | 'two-column';
 };

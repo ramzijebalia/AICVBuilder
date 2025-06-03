@@ -109,6 +109,43 @@ export const summarySchema = z.object({
 export type SummaryValues = z.infer<typeof summarySchema>
 
 
+// CERTIFICATES SCHEMA:
+export const certificatesSchema = z.object({
+    certificates: z.array(
+        z.object({
+            name: optionalString,
+            issuer: optionalString,
+            date: optionalString,
+            url: optionalString,
+        })
+    ).optional(),
+})
+
+export type CertificatesValues = z.infer<typeof certificatesSchema>
+export type Certificate = NonNullable<z.infer<typeof certificatesSchema>["certificates"]>[number]
+
+// INTERESTS SCHEMA:
+export const interestsSchema = z.object({
+    interests: z.array(
+        z.string().trim()
+    ).optional(),
+})
+
+export type InterestsValues = z.infer<typeof interestsSchema>
+
+// LANGUAGES SCHEMA:
+export const languagesSchema = z.object({
+    languages: z.array(
+        z.object({
+            name: optionalString,
+            level: optionalString,
+        })
+    ).optional(),
+})
+
+export type LanguagesValues = z.infer<typeof languagesSchema>
+export type Language = NonNullable<z.infer<typeof languagesSchema>["languages"]>[number]
+
 // shema for the whole resume
 export const resumeSchema = z.object({
     ...generalInfoSchema.shape,
@@ -117,8 +154,11 @@ export const resumeSchema = z.object({
     ...educationSchema.shape,
     ...skillsSchema.shape,
     ...summarySchema.shape,
-    colorHex : optionalString, // the primary color of the resume
-    borderStyle : optionalString,
+    ...certificatesSchema.shape,
+    ...interestsSchema.shape,
+    ...languagesSchema.shape,
+    colorHex: optionalString, // the primary color of the resume
+    borderStyle: optionalString,
     template: z.enum(['modern', 'two-column']).default('modern'), // the template style of the resume
 })
 

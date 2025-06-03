@@ -24,36 +24,47 @@ export function fileReplacer(key : unknown , value: any){
 }
 
 
-export function mapToResumeVlues(data : ResumeServerData) : ResumeValues {
+export function mapToResumeVlues(data: ResumeServerData): ResumeValues {
   return {
-    id : data.id,
+    id: data.id,
     title: data.title || undefined,
-    description : data.description || undefined,
-    photo : data.photoUrl || undefined,  
-    firstName : data.firstName || undefined,
-    lastName : data.lastName || undefined,
-    jobTitle : data.jobTitle || undefined,
-    city : data.city || undefined,
-    country : data.country || undefined,
-    phone : data.phone || undefined,
-    email : data.email || undefined,
-    workExperiences : data.workExperiences.map(work => ({
-      position : work.position || undefined,
-      company : work.company || undefined,
-      startDate : work.startDate?.toISOString().split("T")[0], // we remove the time
-      endDate : work.endDate?.toISOString().split("T")[0],
-      description : work.description || undefined,
+    description: data.description || undefined,
+    photo: data.photoUrl || undefined,  
+    firstName: data.firstName || undefined,
+    lastName: data.lastName || undefined,
+    jobTitle: data.jobTitle || undefined,
+    city: data.city || undefined,
+    country: data.country || undefined,
+    phone: data.phone || undefined,
+    email: data.email || undefined,
+    workExperiences: data.workExperiences.map(work => ({
+      position: work.position || undefined,
+      company: work.company || undefined,
+      startDate: work.startDate?.toISOString().split("T")[0], // we remove the time
+      endDate: work.endDate?.toISOString().split("T")[0],
+      description: work.description || undefined,
     })),
-    educations : data.educations.map(edu => ({
-      degree : edu.degree || undefined,
-      school : edu.school || undefined,
-      startDate : edu.startDate?.toISOString().split("T")[0], // we remove the time
-      endDate : edu.endDate?.toISOString().split("T")[0],
+    educations: data.educations.map(edu => ({
+      degree: edu.degree || undefined,
+      school: edu.school || undefined,
+      startDate: edu.startDate?.toISOString().split("T")[0], // we remove the time
+      endDate: edu.endDate?.toISOString().split("T")[0],
     })),
-    skills : data.skills, // we dont need to mention or undefined because it is an array
-    borderStyle : data.borderStyle , // we dont need to mention or undefined because it has a default value
-    colorHex : data.colorHex , // we dont need to mention or undefined because it has a default value
-    template : data.template || 'modern', // add template with default value
-    summary : data.summary || undefined,
+    certificates: data.certificates?.map(cert => ({
+      name: cert.name || undefined,
+      issuer: cert.issuer || undefined,
+      date: cert.date?.toISOString().split("T")[0],
+      url: cert.url || undefined,
+    })) || [],
+    languages: data.languages?.map(lang => ({
+      name: lang.name || undefined,
+      level: lang.level || undefined,
+    })) || [],
+    skills: data.skills, // we dont need to mention or undefined because it is an array
+    interests: data.interests || [], // we dont need to mention or undefined because it is an array
+    borderStyle: data.borderStyle, // we dont need to mention or undefined because it has a default value
+    colorHex: data.colorHex, // we dont need to mention or undefined because it has a default value
+    template: data.template || 'modern', // add template with default value
+    summary: data.summary || undefined,
   }
 }

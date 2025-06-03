@@ -39,6 +39,9 @@ model Resume {
   workExperiences workExperience[]
   educations      Education[]
   skills          String[]
+  certificates    Certificate[]
+  languages       Language[]
+  interests       String[]
 
   createdAt   DateTime @default(now()) // default value is current time
   updatedAt   DateTime @updatedAt // updated time
@@ -103,4 +106,26 @@ model UserSubscription {
   updatedAt  DateTime @updatedAt
 
   @@map("userSubscriptions")
+}
+
+model Certificate {
+  id          String   @id @default(cuid())
+  resumeId    String
+  name        String
+  issuer      String
+  date        DateTime
+  url         String?
+  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("certificates")
+}
+
+model Language {
+  id          String   @id @default(cuid())
+  resumeId    String
+  name        String
+  level       String
+  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("languages")
 }
