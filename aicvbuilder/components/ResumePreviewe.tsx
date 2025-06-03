@@ -14,7 +14,18 @@ interface ResumePreviewProps {
     className?: string
 }
 
-const templateStyles = {
+type TemplateStyle = {
+    container: string;
+    header: string;
+    section: string;
+    sectionTitle: string;
+    sectionDivider: string;
+    sectionTitleWithLine?: string;
+    sectionTitleText?: string;
+    sectionTitleLine?: string;
+}
+
+const templateStyles: Record<string, TemplateStyle> = {
     modern: {
         container: "bg-white text-black",
         header: "flex items-center gap-4",
@@ -28,7 +39,181 @@ const templateStyles = {
         section: "space-y-4",
         sectionTitle: "text-base font-semibold mb-2",
         sectionDivider: "hidden",
+        sectionTitleWithLine: "flex items-center gap-2 mb-2",
+        sectionTitleText: "text-base font-semibold",
+        sectionTitleLine: "flex-grow border-t",
     }
+}
+
+function CertificatesSection({resumeData, template}: ResumePreviewSectionProps) {
+    const {certificates, colorHex} = resumeData
+    const styles = templateStyles[template]
+    const certificatesNotEmpty = certificates?.filter(
+        (cert) => Object.values(cert).filter(Boolean).length > 0
+    )
+
+    if(!certificatesNotEmpty?.length) return null
+
+    return (
+        <div className="break-inside-avoid">
+            <div className={template === 'two-column' ? styles.sectionTitleWithLine : "flex items-center mb-2"}>
+                <h3 className={template === 'two-column' ? styles.sectionTitleText : styles.sectionTitle} style={{color: colorHex}}>CERTIFICATES</h3>
+                <div className={template === 'two-column' ? styles.sectionTitleLine : styles.sectionDivider} style={{borderColor: colorHex}}></div>
+            </div>
+            <div className="space-y-3">
+                {certificatesNotEmpty.map((cert, index) => (
+                    <div key={index} className="break-inside-avoid">
+                        <div className="flex justify-between items-baseline">
+                            <h4 className="text-sm font-semibold">{cert.name}</h4>
+                            {cert.date && (
+                                <span className="text-xs" style={{color: colorHex}}>
+                                    {formatDate(cert.date, "MM/yyyy")}
+                                </span>
+                            )}
+                        </div>
+                        <p className="text-xs font-medium">{cert.issuer}</p>
+                        {cert.url && (
+                            <a href={cert.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">
+                                View Certificate
+                            </a>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+function LanguagesSection({resumeData, template}: ResumePreviewSectionProps) {
+    const {languages, colorHex} = resumeData
+    const styles = templateStyles[template]
+    const languagesNotEmpty = languages?.filter(
+        (lang) => Object.values(lang).filter(Boolean).length > 0
+    )
+
+    if(!languagesNotEmpty?.length) return null
+
+    return (
+        <div className="break-inside-avoid">
+            <div className={template === 'two-column' ? styles.sectionTitleWithLine : "flex items-center mb-2"}>
+                <h3 className={template === 'two-column' ? styles.sectionTitleText : styles.sectionTitle} style={{color: colorHex}}>LANGUAGES</h3>
+                <div className={template === 'two-column' ? styles.sectionTitleLine : styles.sectionDivider} style={{borderColor: colorHex}}></div>
+            </div>
+            <div className={template === 'two-column' ? "space-y-1" : "grid grid-cols-3 gap-2"}>
+                {languagesNotEmpty.map((lang, index) => (
+                    <div key={index} className={template === 'two-column' ? "flex justify-between items-center" : "flex flex-col"}>
+                        <span className="text-sm font-medium">{lang.name}</span>
+                        <span className="text-xs" style={{color: colorHex}}>{lang.level}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+function SkillsAndInterestsSection({resumeData, template}: ResumePreviewSectionProps) {
+    const {skills = [], interests = [], colorHex} = resumeData
+    const styles = templateStyles[template]
+    const hasSkills = skills.length > 0
+    const hasInterests = interests.length > 0
+
+    if(!hasSkills && !hasInterests) return null
+
+    if (template === 'two-column') {
+        return (
+            <div className="break-inside-avoid space-y-4">
+                {/* Skills Section */}
+                {hasSkills && (
+                    <div>
+                        <div className={styles.sectionTitleWithLine}>
+                            <h3 className={styles.sectionTitleText} style={{color: colorHex}}>SKILLS</h3>
+                            <div className={styles.sectionTitleLine} style={{borderColor: colorHex}}></div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {skills.map((skill, index) => (
+                                <span 
+                                    key={index} 
+                                    className="text-sm text-black"
+                                >
+                                    {skill}{index < skills.length - 1 ? " •" : ""}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Interests Section */}
+                {hasInterests && (
+                    <div>
+                        <div className={styles.sectionTitleWithLine}>
+                            <h3 className={styles.sectionTitleText} style={{color: colorHex}}>INTERESTS</h3>
+                            <div className={styles.sectionTitleLine} style={{borderColor: colorHex}}></div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {interests.map((interest, index) => (
+                                <span 
+                                    key={index} 
+                                    className="text-sm text-black"
+                                >
+                                    {interest}{index < interests.length - 1 ? " •" : ""}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+        )
+    }
+
+    return (
+        <div className="break-inside-avoid">
+            <div className="grid grid-cols-2 gap-4">
+                {/* Skills Column */}
+                <div>
+                    {hasSkills && (
+                        <>
+                            <div className="flex items-center mb-2">
+                                <h3 className={styles.sectionTitle} style={{color: colorHex}}>SKILLS</h3>
+                                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {skills.map((skill, index) => (
+                                    <span 
+                                        key={index} 
+                                        className="text-sm text-black"
+                                    >
+                                        {skill}{index < skills.length - 1 ? " •" : ""}
+                                    </span>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {/* Interests Column */}
+                <div>
+                    {hasInterests && (
+                        <>
+                            <div className="flex items-center mb-2">
+                                <h3 className={styles.sectionTitle} style={{color: colorHex}}>INTERESTS</h3>
+                                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {interests.map((interest, index) => (
+                                    <span 
+                                        key={index} 
+                                        className="text-sm text-black"
+                                    >
+                                        {interest}{index < interests.length - 1 ? " •" : ""}
+                                    </span>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        </div>
+    )
 }
 
 export default function ResumePreview({resumeData, contentRef, className}: ResumePreviewProps) {
@@ -50,7 +235,8 @@ export default function ResumePreview({resumeData, contentRef, className}: Resum
                         {/* Left Column */}
                         <div className="w-1/3 space-y-4">
                             <PersonalInfoHeader resumeData={resumeData} template={template}/>
-                            <SkillsSection resumeData={resumeData} template={template}/>
+                            <LanguagesSection resumeData={resumeData} template={template}/>
+                            <SkillsAndInterestsSection resumeData={resumeData} template={template}/>
                         </div>
                         
                         {/* Right Column */}
@@ -58,6 +244,7 @@ export default function ResumePreview({resumeData, contentRef, className}: Resum
                             <SummarySection resumeData={resumeData} template={template}/>
                             <WorkExperienceSection resumeData={resumeData} template={template}/>
                             <EducationSection resumeData={resumeData} template={template}/>
+                            <CertificatesSection resumeData={resumeData} template={template}/>
                         </div>
                     </div>
                 ) : (
@@ -67,7 +254,9 @@ export default function ResumePreview({resumeData, contentRef, className}: Resum
                             <SummarySection resumeData={resumeData} template={template}/>
                             <WorkExperienceSection resumeData={resumeData} template={template}/>
                             <EducationSection resumeData={resumeData} template={template}/>
-                            <SkillsSection resumeData={resumeData} template={template}/>
+                            <CertificatesSection resumeData={resumeData} template={template}/>
+                            <LanguagesSection resumeData={resumeData} template={template}/>
+                            <SkillsAndInterestsSection resumeData={resumeData} template={template}/>
                         </div>
                     </>
                 )}
@@ -136,9 +325,9 @@ function SummarySection({resumeData, template}: ResumePreviewSectionProps) {
 
     return (
         <div className="break-inside-avoid">
-            <div className="flex items-center mb-2">
-                <h3 className={styles.sectionTitle} style={{color: colorHex}}>SUMMARY</h3>
-                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
+            <div className={template === 'two-column' ? styles.sectionTitleWithLine : "flex items-center mb-2"}>
+                <h3 className={template === 'two-column' ? styles.sectionTitleText : styles.sectionTitle} style={{color: colorHex}}>SUMMARY</h3>
+                <div className={template === 'two-column' ? styles.sectionTitleLine : styles.sectionDivider} style={{borderColor: colorHex}}></div>
             </div>
             <p className="text-xs text-justify whitespace-pre-line">{summary}</p>
         </div>
@@ -156,9 +345,9 @@ function WorkExperienceSection({resumeData, template}: ResumePreviewSectionProps
 
     return (
         <div className="break-inside-avoid">
-            <div className="flex items-center mb-2">
-                <h3 className={styles.sectionTitle} style={{color: colorHex}}>EXPERIENCE</h3>
-                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
+            <div className={template === 'two-column' ? styles.sectionTitleWithLine : "flex items-center mb-2"}>
+                <h3 className={template === 'two-column' ? styles.sectionTitleText : styles.sectionTitle} style={{color: colorHex}}>EXPERIENCE</h3>
+                <div className={template === 'two-column' ? styles.sectionTitleLine : styles.sectionDivider} style={{borderColor: colorHex}}></div>
             </div>
             <div className="space-y-3">
                 {workExperiencesNotEmpty.map((exp, index) => (
@@ -192,9 +381,9 @@ function EducationSection({resumeData, template}: ResumePreviewSectionProps) {
 
     return (
         <div className="break-inside-avoid">
-            <div className="flex items-center mb-2">
-                <h3 className={styles.sectionTitle} style={{color: colorHex}}>EDUCATION</h3>
-                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
+            <div className={template === 'two-column' ? styles.sectionTitleWithLine : "flex items-center mb-2"}>
+                <h3 className={template === 'two-column' ? styles.sectionTitleText : styles.sectionTitle} style={{color: colorHex}}>EDUCATION</h3>
+                <div className={template === 'two-column' ? styles.sectionTitleLine : styles.sectionDivider} style={{borderColor: colorHex}}></div>
             </div>
             <div className="space-y-3">
                 {educationsNotEmpty.map((edu, index) => (
@@ -209,40 +398,6 @@ function EducationSection({resumeData, template}: ResumePreviewSectionProps) {
                         </div>
                         <p className="text-xs font-medium">{edu.school}</p>
                     </div>
-                ))}
-            </div>
-        </div>
-    )
-}
-
-function SkillsSection({resumeData, template}: ResumePreviewSectionProps) {
-    const {skills, colorHex, borderStyle} = resumeData
-    const styles = templateStyles[template]
-    if(!skills?.length) return null
-
-    return (
-        <div className="break-inside-avoid">
-            <div className="flex items-center mb-2">
-                <h3 className={styles.sectionTitle} style={{color: colorHex}}>SKILLS</h3>
-                <div className={styles.sectionDivider} style={{borderColor: colorHex}}></div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-                {skills.map((skill, index) => (
-                    <Badge 
-                        key={index} 
-                        className="text-white rounded-md"
-                        style={{
-                            backgroundColor: colorHex,
-                            borderRadius: 
-                                borderStyle === BorderStyles.SQUARE 
-                                    ? "0px"
-                                    : borderStyle === BorderStyles.CIRCLE
-                                    ? "9999px"
-                                    : "8px"
-                        }}
-                    >
-                        {skill}
-                    </Badge>
                 ))}
             </div>
         </div>
