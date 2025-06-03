@@ -14,30 +14,56 @@ interface BreadcrumbsProps {
 } 
 
 export default function Breadcrumbs({currentStep, setCurrentStep} : BreadcrumbsProps) {
-    return (
-        <div className="flex , justify-center">
-            <Breadcrumb>
-                <BreadcrumbList>
-                    {steps.map(step => (
-                        // we can use <> </> instead of <React.Fragment> </React.Fragment>
-                        <React.Fragment key={step.key}>
-                            <BreadcrumbItem>
-                                {step.key === currentStep ? (
-                                    <BreadcrumbPage>{step.title}</BreadcrumbPage>
-                                    ) : (
-                                    <BreadcrumbLink asChild>
-                                        <button onClick={() => setCurrentStep(step.key)}>
-                                            {step.title}
-                                        </button>
-                                    </BreadcrumbLink>
-                                )}
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator className="last:hidden"/>
-                        </React.Fragment>
-                    ))}
-                </BreadcrumbList>
-            </Breadcrumb>
-        </div>
+    // Split steps into two groups
+    const firstLineSteps = steps.slice(0, 5); // First 5 steps
+    const secondLineSteps = steps.slice(5); // Remaining steps
 
+    return (
+        <div className="flex flex-col gap-2">
+            <div className="flex justify-center">
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        {firstLineSteps.map(step => (
+                            <React.Fragment key={step.key}>
+                                <BreadcrumbItem>
+                                    {step.key === currentStep ? (
+                                        <BreadcrumbPage>{step.title}</BreadcrumbPage>
+                                    ) : (
+                                        <BreadcrumbLink asChild>
+                                            <button onClick={() => setCurrentStep(step.key)}>
+                                                {step.title}
+                                            </button>
+                                        </BreadcrumbLink>
+                                    )}
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator className="last:hidden"/>
+                            </React.Fragment>
+                        ))}
+                    </BreadcrumbList>
+                </Breadcrumb>
+            </div>
+            <div className="flex justify-center">
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        {secondLineSteps.map(step => (
+                            <React.Fragment key={step.key}>
+                                <BreadcrumbItem>
+                                    {step.key === currentStep ? (
+                                        <BreadcrumbPage>{step.title}</BreadcrumbPage>
+                                    ) : (
+                                        <BreadcrumbLink asChild>
+                                            <button onClick={() => setCurrentStep(step.key)}>
+                                                {step.title}
+                                            </button>
+                                        </BreadcrumbLink>
+                                    )}
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator className="last:hidden"/>
+                            </React.Fragment>
+                        ))}
+                    </BreadcrumbList>
+                </Breadcrumb>
+            </div>
+        </div>
     )
 }

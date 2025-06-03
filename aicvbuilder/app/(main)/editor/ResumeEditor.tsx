@@ -19,7 +19,27 @@ interface ResumeEditorProps {
 export default function ResumeEditor( {resumeToEdit} : ResumeEditorProps) {
 
     const [resumeData , setResumeData] = useState<ResumeValues>(
-        resumeToEdit ? mapToResumeVlues(resumeToEdit) : {} ,
+        resumeToEdit ? mapToResumeVlues(resumeToEdit) : {
+            title: "",
+            description: "",
+            firstName: "",
+            lastName: "",
+            jobTitle: "",
+            city: "",
+            country: "",
+            phone: "",
+            email: "",
+            workExperiences: [],
+            educations: [],
+            skills: [],
+            summary: "",
+            certificates: [],
+            languages: [],
+            interests: [],
+            colorHex: "#000000",
+            borderStyle: "rounded",
+            template: "modern"
+        }
     ) // we will use this to store the data of the resume
 
     const [showSmallScResumePreview , setShowSmallScResumePreview] = useState(false) // we will use this to show the resume in the small screens
