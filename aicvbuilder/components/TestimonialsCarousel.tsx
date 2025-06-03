@@ -7,15 +7,15 @@ const testimonials = [
   {
     name: "Sarah Johnson",
     role: "Software Engineer",
-    company: "Google",
+    company: "Plum Inc",
     avatar: "👩‍💻",
     quote: "AICVBuilder helped me create a standout resume that got me interviews at top tech companies. The AI suggestions were incredibly helpful!",
     color: "green"
   },
   {
     name: "Michael Chen",
-    role: "Marketing Manager",
-    company: "Microsoft",
+    role: "Chen Cosmetic",
+    company: "Chen Cosmetic",
     avatar: "👨‍💼",
     quote: "The professional templates and AI optimization helped me land my dream job. Worth every penny!",
     color: "blue"
@@ -23,7 +23,7 @@ const testimonials = [
   {
     name: "Emily Rodriguez",
     role: "Product Designer",
-    company: "Apple",
+    company: "Apy Inc",
     avatar: "👩‍🎨",
     quote: "I was skeptical at first, but the AI suggestions were spot-on. Got multiple job offers within weeks!",
     color: "purple"
@@ -31,7 +31,7 @@ const testimonials = [
   {
     name: "David Kim",
     role: "Data Scientist",
-    company: "Amazon",
+    company: "Stride Inc",
     avatar: "👨‍🔬",
     quote: "The AI-powered content suggestions helped me highlight my achievements in a way I never thought possible.",
     color: "orange"
@@ -39,7 +39,7 @@ const testimonials = [
   {
     name: "Sophia Patel",
     role: "UX Researcher",
-    company: "Meta",
+    company: "Metakit",
     avatar: "👩‍🔍",
     quote: "The templates are beautiful and the AI suggestions are incredibly smart. Landed my dream job at Meta!",
     color: "pink"

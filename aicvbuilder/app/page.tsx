@@ -90,7 +90,7 @@ export default function Home() {
                 <div className="bg-green-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                   <Users className="w-10 h-10 text-green-600" />
                 </div>
-                <div className="text-5xl font-bold text-gray-900 mb-3">50K+</div>
+                <div className="text-5xl font-bold text-gray-900 mb-3">397</div>
                 <div className="text-lg text-gray-600">Active Users</div>
               </div>
 
@@ -98,7 +98,7 @@ export default function Home() {
                 <div className="bg-blue-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                   <FileText className="w-10 h-10 text-blue-600" />
                 </div>
-                <div className="text-5xl font-bold text-gray-900 mb-3">125K+</div>
+                <div className="text-5xl font-bold text-gray-900 mb-3">906</div>
                 <div className="text-lg text-gray-600">Resumes Created</div>
               </div>
 
@@ -106,7 +106,7 @@ export default function Home() {
                 <div className="bg-purple-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                   <Star className="w-10 h-10 text-purple-600" />
                 </div>
-                <div className="text-5xl font-bold text-gray-900 mb-3">4.9/5</div>
+                <div className="text-5xl font-bold text-gray-900 mb-3">4.85/5</div>
                 <div className="text-lg text-gray-600">User Rating</div>
               </div>
 
@@ -114,7 +114,7 @@ export default function Home() {
                 <div className="bg-orange-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                   <Zap className="w-10 h-10 text-orange-600" />
                 </div>
-                <div className="text-5xl font-bold text-gray-900 mb-3">85%</div>
+                <div className="text-5xl font-bold text-gray-900 mb-3">89%</div>
                 <div className="text-lg text-gray-600">Success Rate</div>
               </div>
             </div>
