@@ -17,7 +17,7 @@ export async function saveResume( values : ResumeValues) {
     // we will use the resume schema to valiate  our inputs
     // we have to distructure these values beacuse photo is a fiel , workexp and edu are arrays
     const {
-        photo, workExperiences , educations , ...resumeValues
+        photo, workExperiences, educations, certificates, languages, interests, ...resumeValues
     } = resumeSchema.parse(values)
 
     // user id
@@ -73,7 +73,6 @@ export async function saveResume( values : ResumeValues) {
                 photoUrl: newPhotoUrl,
                 workExperiences: {
                     deleteMany: {}, // delete all existing work experiences
-                    // teh dates are strings but it expect an actual date object  so we havee to map them
                     create: workExperiences?.map(exp => ({
                         ...exp,
                         startDate: exp.startDate ? new Date(exp.startDate) : undefined,
@@ -88,10 +87,30 @@ export async function saveResume( values : ResumeValues) {
                         endDate: edu.endDate ? new Date(edu.endDate) : undefined
                     }))
                 },
+                certificates: {
+                    deleteMany: {},
+                    create: certificates?.filter((cert): cert is { name: string; issuer: string; date: string; url?: string } => 
+                        Boolean(cert.name && cert.issuer && cert.date)
+                    ).map(cert => ({
+                        name: cert.name,
+                        issuer: cert.issuer,
+                        date: new Date(cert.date),
+                        url: cert.url
+                    }))
+                },
+                languages: {
+                    deleteMany: {},
+                    create: languages?.filter((lang): lang is { name: string; level: string } => 
+                        Boolean(lang.name && lang.level)
+                    ).map(lang => ({
+                        name: lang.name,
+                        level: lang.level
+                    }))
+                },
+                interests: interests || [],
                 updatedAt: new Date() // update the update date too the current  date
             }
         })
-
     }else{
         // if the resume id is not defined create a new resume
         return prisma.resume.create({
@@ -113,6 +132,25 @@ export async function saveResume( values : ResumeValues) {
                         endDate: edu.endDate ? new Date(edu.endDate) : undefined
                     }))
                 },
+                certificates: {
+                    create: certificates?.filter((cert): cert is { name: string; issuer: string; date: string; url?: string } => 
+                        Boolean(cert.name && cert.issuer && cert.date)
+                    ).map(cert => ({
+                        name: cert.name,
+                        issuer: cert.issuer,
+                        date: new Date(cert.date),
+                        url: cert.url
+                    }))
+                },
+                languages: {
+                    create: languages?.filter((lang): lang is { name: string; level: string } => 
+                        Boolean(lang.name && lang.level)
+                    ).map(lang => ({
+                        name: lang.name,
+                        level: lang.level
+                    }))
+                },
+                interests: interests || []
             }
         })
     }
