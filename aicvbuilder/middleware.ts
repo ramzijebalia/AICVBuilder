@@ -6,7 +6,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 // hre we mentioned some paths that we want to exclude from authentification ( we can open them even we are not login in )
 // we can add for exmpale : "/forgot-password(.*)" , "/reset-password(.*)"
-const isPublicRoute = createRouteMatcher(["/" , "/sign-in(.*)" , "sign-up(.*)", "/api/stripe-webhook"]);
+const isPublicRoute = createRouteMatcher(["/" , "/sign-in(.*)" , "/sign-up(.*)", "/api/stripe-webhook"]);
 
 export default clerkMiddleware(async (auth , request) =>{
     if(!isPublicRoute(request)){ // if the route is not public we will check if the user is authenticated or not
