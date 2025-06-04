@@ -157,8 +157,8 @@ export const resumeSchema = z.object({
     ...certificatesSchema.shape,
     ...interestsSchema.shape,
     ...languagesSchema.shape,
-    colorHex: optionalString, // the primary color of the resume
-    borderStyle: optionalString,
+    colorHex: z.string().default("#000000"), // the primary color of the resume
+    borderStyle: z.string().default("squircle"),
     template: z.enum(['modern', 'two-column']).default('modern'), // the template style of the resume
 })
 

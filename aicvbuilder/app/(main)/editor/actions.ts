@@ -39,10 +39,15 @@ export async function saveResume( values : ResumeValues) {
 
     if(id && !existingResume) throw new Error("Resume not found")
 
-    const hasCustomizations = (resumeValues.borderStyle &&
-        resumeValues.borderStyle !== existingResume?.borderStyle // we wanna allow the user to keep the existinng border style enevn teh subs is experied
-    ) || (resumeValues.colorHex && 
-        resumeValues.colorHex !== existingResume?.colorHex // we wanna allow the user to keep the existinng color hex enevn teh subs is experied
+    // Only consider it customization if user is explicitly trying to change values
+    const hasCustomizations = existingResume ? (
+        // For existing resumes, only check if values are being changed
+        (resumeValues.borderStyle && resumeValues.borderStyle !== existingResume.borderStyle) ||
+        (resumeValues.colorHex && resumeValues.colorHex !== existingResume.colorHex)
+    ) : (
+        // For new resumes, only check if values are explicitly set to non-defaults
+        (resumeValues.borderStyle && resumeValues.borderStyle !== "squircle") ||
+        (resumeValues.colorHex && resumeValues.colorHex !== "#000000")
     )
     
     if(hasCustomizations && !canUseCustomizations(subscriptionLevel)) throw new Error("Customizations are not allowed for this subscription level ")
